@@ -1,0 +1,38 @@
+regulation GDPR version "1.0"
+
+policy starts
+
+@["(2) - Universal protection of personal data rights"]
+forall dc, ds, data. (dataController(dc) and dataSubject(ds) and personalData(data) and processData(dc, ds, data)) implies (hasRight(ds, protectionOfPersonalData) and respectsFundamentalRights(dc, ds)) ;
+
+@["(4) - Purpose of personal data processing"]
+forall dc, dp, ds, data. (dataController(dc) and dataProcessor(dp) and dataSubject(ds) and personalData(data) and processData(dc, dp, data)) implies purposeIsPurpose(processData(dc, dp, data), @PublicInterest) ;
+
+@["(4) - Balancing of data protection rights"]
+forall ds, data, right. (dataSubject(ds) and personalData(data) and hasRight(ds, right)) implies (exists purpose. (purposeIsPurpose(purpose, @PublicInterest) and hasLegalBasis(purpose, @LegitimateInterest))) ;
+
+@["(13) - Small organization record-keeping derogation"]
+forall org. (dataController(org) and fewerThan250Employees(org)) implies exemptFromRecordKeeping(org) ;
+
+@["(13) - Consideration for SME needs"]
+forall dc, sa, purpose. (dataController(dc) and supervisoryAuthority(sa) and purposeIsPurpose(purpose, @LegitimateInterest)) implies (hasLegalBasis(dc, @LegitimateInterest) and processData(dc, sa, purpose)) ;
+
+@["Article 2(14) - Protection applies to all natural persons"]
+forall dc, ds, data. (dataController(dc) and dataSubject(ds) and personalData(data) and processData(dc, ds, data)) implies (dataSubject(ds)) ;
+
+@["Article 2(14) - Exclusion of legal persons"]
+forall dc, dp, data. (dataController(dc) and dataProcessor(dp) and personalData(data) and (concernsLegalPersonName(data) or concernsLegalPersonForm(data) or concernsLegalPersonContactDetails(data))) implies not(processData(dc, dp, data)) ;
+
+@["Article 2(15) - Technology-neutral protection scope"]
+forall dc, ds, data. (dataController(dc) and dataSubject(ds) and personalData(data) and (processData(dc, ds, data))) implies (protectionApplies(ds, data)) ;
+
+@["Article 2(15) - Exclusion of unstructured files"]
+forall file. (isFile(file) and not structuredAccordingToCriteria(file)) implies not withinRegulationScope(file) ;
+
+@["Article 2(16) - Exclusion for national security activities"]
+forall dc, ds, data. (dataController(dc) and dataSubject(ds) and personalData(data) and (nationalSecurityActivity(data) or outsideUnionLawScope(data))) implies not(gdprApplies(dc, ds, data)) ;
+
+@["Article 2(16) - Exclusion for CFSP activities"]
+forall dc, ds, data. (dataController(dc) and dataSubject(ds) and personalData(data) and memberState(dc) and purposeIsPurpose(cfsp, @PublicInterest) and processData(dc, ds, data)) implies not(gdprApplies(dc, ds, data)) ;
+
+policy ends

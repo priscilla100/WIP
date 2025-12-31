@@ -1,0 +1,378 @@
+# Entities and actors (constants must be prefixed with @)
+Hospital1
+Clinic1
+Provider1
+
+# Protected Health Information
+MedicalRecord1
+XRay1
+LabResult1
+
+# Recipients
+Specialist1
+Researcher1
+FamilyMember1
+PublicHealthDept1
+
+# Purpose Constants (MUST have @ prefix)
+@Treatment
+@Payment
+@Research
+@PublicHealth
+@Emergency
+
+#Patients
+@PatientAlice
+@PatientBob
+@PatientCarol
+@PatientDave
+@PatientEve
+@PatientFrank
+@PatientGrace
+@PatientHank
+@Grandma
+@ChildMinor
+
+ Healthcare Providers (Individual)
+@Dr_Smith
+@Dr_Johnson
+@Dr_Williams
+@Therapist_Jones
+@Therapist_Brown
+@Nurse_Karen
+@Nurse_Mike
+@Psychologist_Chen
+@Psychiatrist_Lee
+@Surgeon_Martinez
+
+ Covered Entities
+@HospitalA
+@HospitalB
+@ClinicC
+@MentalHealthClinic
+@GroupPracticeD
+@HealthPlanX
+@ClearinghouseY
+
+ Business Associates
+@PharmacyX
+@BillingCompanyZ
+@CloudProviderAWS
+@TranscriptionServiceT
+@ShredCompanyS
+
+ Family Members & Caregivers
+@AliceHusband
+@BobWife
+@CarolDaughter
+@DaveSon
+@GrandmaCaregiver
+
+ Researchers & IRBs
+@Researcher_Martin
+@Researcher_Wong
+@IRB_01
+@IRB_University
+@PrivacyBoard_Hospital
+
+ Public Health & Oversight
+@HealthDeptStateA
+@CDC
+@FDA
+@OIG
+@OCR
+@HealthOversightAgency_State
+
+ Law Enforcement
+@OfficerJones
+@Detective_Brown
+@FBI_Agent
+@CourtJudgeSmith
+@Attorney_District
+
+ Other Authorities
+@ChildProtectiveServices
+@AdultProtectiveServices
+@Coroner_CountyA
+@MedicalExaminer
+
+ Workforce Members
+@ITAdmin_Hospital
+@Receptionist_Clinic
+@BillingClerk
+@ComplianceOfficer_Davis
+@PrivacyOfficer_Kim
+
+ Purposes (String representations for inrole)
+ These are used with purposeIsPurpose predicate
+ Actual Purpose constants are defined in type system as @Treatment, @Payment, etc.
+
+#Roles (strings used with inrole predicate)
+patient
+physician
+therapist
+nurse
+psychiatrist
+psychologist
+surgeon
+researcher
+compliance_officer
+privacy_officer
+audit_officer
+lab_technician
+billing_specialist
+it_administrator
+receptionist
+caregiver
+law_enforcement
+public_health_official
+oversight_official
+attorney
+judge
+
+ Systems
+@system_ehr
+@system_billing
+@system_lab
+@system_imaging
+@system_pharmacy
+@system_portal
+@system_backup
+@workstation_001
+@workstation_002
+@workstation_dr_office
+@workstation_nurse_station
+@laptop_mobile_001
+@server_database
+@server_application
+@server_web
+
+ Risks
+@risk_unauthorized_access
+@risk_malware
+@risk_data_loss
+@risk_insider_threat
+@risk_ransomware
+@risk_phishing
+@risk_physical_theft
+@risk_improper_disposal
+@risk_weak_passwords
+@risk_unencrypted_transmission
+
+ Incidents
+@incident_001
+@incident_ransomware
+@incident_phishing
+@incident_data_breach
+@incident_unauthorized_access
+@incident_lost_laptop
+@incident_improper_disposal
+@incident_workforce_snooping
+
+ Breaches
+@breach_001
+@breach_002
+@breach_ransomware_attack
+@breach_lost_unencrypted_device
+@breach_email_misdirection
+@breach_hacking_incident
+
+ Facilities
+facility_hospital_main
+facility_clinic_north
+facility_data_center
+facility_office_admin
+secure_area_records
+server_room
+
+ Media
+media_backup_tape_001
+media_hard_drive_old
+media_usb_drive_001
+media_cd_rom_patient_records
+media_laptop_hdd
+
+ Transmissions
+transmission_email_001
+transmission_vpn_001
+transmission_ftp_unencrypted
+transmission_https_portal
+transmission_cleartext_001
+
+ Sessions
+session_001
+session_002
+session_idle_30min
+
+ Activities
+activity_login
+activity_access_phi
+activity_modify_record
+activity_export_data
+activity_admin_change
+
+ Disasters/Emergencies
+disaster_hurricane
+disaster_fire
+disaster_flood
+emergency_patient_critical
+emergency_system_failure
+
+ Repairs/Maintenance
+repair_server_001
+repair_hvac_server_room
+maintenance_quarterly_001
+
+ Access Levels
+access_level_full
+access_level_read_only
+access_level_limited
+access_level_emergency
+access_level_admin
+
+ Violations
+violation_password_sharing
+violation_unauthorized_access
+violation_improper_disposal
+violation_missing_encryption
+
+ Privacy Actions
+action_notice_provided
+action_authorization_obtained
+action_restriction_implemented
+action_breach_notification_sent
+
+ Privacy Documents
+document_privacy_policy
+document_training_records
+document_baa_template
+document_incident_log
+document_risk_analysis_2024
+
+ Harm Types
+harm_identity_theft
+harm_financial_loss
+harm_reputational_damage
+harm_embarrassment
+harm_discrimination
+
+ Waivers
+waiver_marketing_consent
+waiver_research_participation
+
+ Authorizations
+@auth_marketing_001
+@auth_research_combined
+@auth_sale_phi
+@auth_fundraising_001
+@auth_valid_001
+@auth_invalid_compound
+
+ Amendments
+@amendment_req_001
+@amendment_req_002
+@amendment_req_denied
+@amendment_accepted
+
+ Accountings
+@accounting_req_001
+@accounting_period_6months
+@accounting_period_1year
+
+ Restrictions
+@restriction_req_healthplan
+@restriction_req_employer
+@restriction_agreed_001
+@restriction_terminated_001
+
+ Complaints
+@complaint_001
+@complaint_privacy_violation
+@complaint_access_denied
+
+ Disclosures (for accounting)
+@disclosure_public_health_001
+@disclosure_law_enforcement_002
+@disclosure_research_003
+@disclosure_tpo_excluded
+@disclosure_with_auth_excluded
+@disclosure_to_individual_excluded
+
+ Marketing Communications
+"marketing_comm_drug_promotion"
+"marketing_comm_face_to_face"
+"marketing_comm_nominal_gift"
+"marketing_comm_wellness_program"
+
+ Fundraising Communications
+"fundraising_hospital_gala"
+"fundraising_clinic_campaign"
+"fundraising_research_donation"
+
+ Sale of PHI
+"sale_research_dataset"
+"sale_marketing_list"
+"sale_ba_services"
+
+ Notices
+"notice_privacy_practices_v1"
+"notice_privacy_practices_v2"
+"notice_breach_notification"
+"notice_joint_practice"
+
+ Formats
+"format_pdf"
+"format_paper_copy"
+"format_electronic_ehr"
+"format_cd_rom"
+"format_usb_drive"
+
+ Summaries
+"summary_medical_record"
+"summary_treatment_history"
+
+ Statements
+"statement_amendment_disagreement"
+"statement_correction_request"
+
+ Periods
+"period_6_months"
+"period_1_year"
+"period_3_years"
+"period_6_years"
+
+ Visits
+"visit_first_encounter"
+"visit_followup_001"
+"visit_emergency_001"
+
+ Emergencies
+"emergency_cardiac_arrest"
+"emergency_trauma"
+"emergency_stroke"
+
+ Research Studies
+"research_study_diabetes"
+"research_study_cancer"
+"research_preparatory_review"
+
+ Former Employees
+@FormerEmployee_001
+@FormerEmployee_002
+@TerminatedContractor_001
+
+ Minors
+@Minor_Emancipated
+@Minor_Unemancipated
+@Minor_Parent_Consents
+
+ Personal Representatives
+@Parent_Guardian
+@Legal_Guardian
+@Healthcare_Proxy
+@Executor_Estate
+
+ Third Parties for Direct Transmission
+@ThirdParty_FamilyMember
+@ThirdParty_Attorney
+@ThirdParty_Employer

@@ -1,0 +1,5 @@
+(1) =>(at_bank,X(at_cafe))
+(2) !(U(at_bank,!(at_cafe)))
+(3) U(FALSE,=>(at_bank,X(at_cafe)))
+(4) &(at_cafe,=>(at_bank,X(at_cafe)))
+(5) =>(at_cafe,=>(at_bank,X(at_cafe)))

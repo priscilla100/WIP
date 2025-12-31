@@ -1,0 +1,352 @@
+# Age function (Entity -> Int)
+age(@PatientAlice) = 34
+age(@PatientBob) = 45
+age(@PatientCarol) = 28
+age(@PatientDave) = 52
+age(@PatientEve) = 67
+age(@PatientFrank) = 19
+age(@PatientGrace) = 41
+age(@PatientHank) = 73
+age(@Grandma) = 82
+age(@ChildMinor) = 14
+age(@Dr_Smith) = 51
+age(@Dr_Johnson) = 39
+age(@Therapist_Jones) = 44
+age(@Nurse_Karen) = 35
+
+# PHI sensitivity score (PHI -> Int)
+# Scale: 1-15, where higher = more sensitive
+phiSensitivityScore(@phi_medrec_001) = 5
+phiSensitivityScore(@phi_psych_aaa) = 12
+phiSensitivityScore(@phi_sud_zzz) = 13
+phiSensitivityScore(@phi_lab_023) = 4
+phiSensitivityScore(@phi_research_xyz) = 3
+phiSensitivityScore(@phi_deident_abc) = 0
+phiSensitivityScore(@phi_limited_data_def) = 2
+
+# Authorization expiration (Auth -> String as Date)
+authExpiration(@auth_001) = "2026-12-31"
+authExpiration(@auth_research_01) = "2025-06-30"
+authExpiration(@auth_psych_notes_01) = "2025-12-31"
+authExpiration(@auth_marketing_01) = "2026-03-15"
+authExpiration(@auth_disclosure_family) = "2027-01-01"
+authExpiration(@auth_research_deceased) = "2025-12-31"
+
+# Data use agreement expiration
+duaExpiration(@dua_research_001) = "2026-12-31"
+duaExpiration(@dua_public_health_01) = "2025-09-30"
+
+# Court order dates
+courtOrderDate(@court_order_001) = "2024-11-15"
+courtOrderDate(@subpoena_001) = "2024-10-20"
+
+# Disclosure dates (for accounting)
+disclosureDate(@disclosure_001) = "2024-08-15"
+disclosureDate(@disclosure_002) = "2024-09-22"
+disclosureDate(@disclosure_003) = "2024-10-05"
+disclosureDate(@disclosure_004) = "2024-11-12"
+
+# Access request dates (for 30-day compliance window)
+accessRequestDate(@access_req_001) = "2024-11-01"
+accessRequestDate(@access_req_002) = "2024-11-15"
+
+# Amendment request dates
+amendmentRequestDate(@amend_req_001) = "2024-10-10"
+
+# Breach discovery dates (for notification requirements)
+breachDiscoveryDate(@breach_001) = "2024-11-20"
+breachDiscoveryDate(@breach_002) = "2024-10-28"
+
+# Records affected count (for breach severity)
+recordsAffectedCount(@breach_001) = 523
+recordsAffectedCount(@breach_002) = 47
+
+# Days since event (Entity -> Int) - for temporal reasoning
+daysSinceRequest(@access_req_001) = 27
+daysSinceRequest(@access_req_002) = 13
+daysSinceRequest(@amend_req_001) = 49
+
+# IRB approval dates
+irbApprovalDate(@irb_approval_001) = "2024-06-01"
+irbApprovalDate(@irb_approval_002) = "2024-09-15"
+
+# Years since decease (for research on decedents)
+yearsSinceDecease(@PatientDeceased_A) = 2
+yearsSinceDecease(@PatientDeceased_B) = 5
+
+# Minimum necessary data volume (percentage of full record)
+minNecessaryPercent(@disclosure_001) = 25
+minNecessaryPercent(@disclosure_002) = 40
+minNecessaryPercent(@disclosure_003) = 15
+
+# Notification delivery method
+notificationMethod(@notice_001) = "email"
+notificationMethod(@notice_002) = "paper_mail"
+notificationMethod(@notice_003) = "in_person"
+
+# Restriction scope (percentage of PHI restricted)
+restrictionScope(@restriction_001) = 100
+restrictionScope(@restriction_002) = 30
+
+# Risk Severity Score (Risk -> Int, scale 1-10)
+riskSeverity(@risk_unauthorized_access) = 8
+riskSeverity(@risk_malware) = 7
+riskSeverity(@risk_data_loss) = 9
+riskSeverity(@risk_insider_threat) = 6
+riskSeverity(@risk_ransomware) = 10
+riskSeverity(@risk_phishing) = 7
+riskSeverity(@risk_physical_theft) = 6
+riskSeverity(@risk_improper_disposal) = 5
+riskSeverity(@risk_weak_passwords) = 6
+riskSeverity(@risk_unencrypted_transmission) = 8
+
+# Risk Likelihood (Risk -> Int, scale 1-10)
+riskLikelihood(@risk_unauthorized_access) = 5
+riskLikelihood(@risk_malware) = 7
+riskLikelihood(@risk_data_loss) = 3
+riskLikelihood(@risk_insider_threat) = 4
+riskLikelihood(@risk_ransomware) = 6
+riskLikelihood(@risk_phishing) = 8
+riskLikelihood(@risk_physical_theft) = 3
+riskLikelihood(@risk_improper_disposal) = 5
+riskLikelihood(@risk_weak_passwords) = 6
+riskLikelihood(@risk_unencrypted_transmission) = 4
+
+# Incident Severity (Incident -> Int)
+incidentSeverity(@incident_001) = 5
+incidentSeverity(@incident_ransomware) = 10
+incidentSeverity(@incident_phishing) = 6
+incidentSeverity(@incident_data_breach) = 9
+incidentSeverity(@incident_unauthorized_access) = 7
+incidentSeverity(@incident_lost_laptop) = 8
+incidentSeverity(@incident_improper_disposal) = 6
+incidentSeverity(@incident_workforce_snooping) = 7
+
+# Incident Date
+incidentDate(@incident_001) = "2024-10-15"
+incidentDate(@incident_ransomware) = "2024-09-22"
+incidentDate(@incident_phishing) = "2024-11-03"
+incidentDate(@incident_data_breach) = "2024-08-30"
+incidentDate(@incident_unauthorized_access) = "2024-10-10"
+incidentDate(@incident_lost_laptop) = "2024-11-20"
+
+# Breach Affected Count (String -> Int)
+breachAffectedCount(@breach_001) = 523
+breachAffectedCount(@breach_002) = 47
+breachAffectedCount(@breach_ransomware_attack) = 1200
+breachAffectedCount(@breach_lost_unencrypted_device) = 350
+breachAffectedCount(@breach_email_misdirection) = 1
+breachAffectedCount(@breach_hacking_incident) = 8500
+
+# Breach Discovery Date
+breachDiscoveryDate(@breach_001) = "2024-11-20"
+breachDiscoveryDate(@breach_002) = "2024-10-28"
+breachDiscoveryDate(@breach_ransomware_attack) = "2024-09-22"
+breachDiscoveryDate(@breach_lost_unencrypted_device) = "2024-11-20"
+breachDiscoveryDate(@breach_email_misdirection) = "2024-11-15"
+
+# Notification Date
+breachNotificationDate(@breach_001) = "2024-12-15"
+breachNotificationDate(@breach_002) = "2024-11-25"
+
+# Training Date
+trainingDate(@Dr_Smith) = "2024-01-15"
+trainingDate(@Nurse_Karen) = "2024-01-20"
+trainingDate(@ITAdmin_Hospital) = "2024-02-01"
+trainingDate(@Receptionist_Clinic) = "2024-01-18"
+
+# Last Password Change (Entity, System -> Date)
+lastPasswordChange(@Dr_Smith, @system_ehr) = "2024-10-01"
+lastPasswordChange(@Nurse_Karen, @system_ehr) = "2024-11-15"
+lastPasswordChange(@ITAdmin_Hospital, @system_ehr) = "2024-11-20"
+
+# Password Complexity Score (Entity, System -> Int, scale 1-10)
+passwordComplexityScore(@Dr_Smith, @system_ehr) = 8
+passwordComplexityScore(@Nurse_Karen, @system_ehr) = 7
+passwordComplexityScore(@ITAdmin_Hospital, @system_ehr) = 10
+passwordComplexityScore(@Receptionist_Clinic, @system_billing) = 6
+
+# Session Timeout Minutes (System -> Int)
+sessionTimeoutMinutes(@system_ehr) = 15
+sessionTimeoutMinutes(@system_billing) = 20
+sessionTimeoutMinutes(@system_portal) = 10
+sessionTimeoutMinutes(@workstation_001) = 15
+
+# Encryption Strength (System/Transmission -> String)
+encryptionStrength(@system_ehr) = "AES-256"
+encryptionStrength(@system_billing) = "AES-256"
+encryptionStrength("transmission_vpn_001") = "TLS-1.3"
+encryptionStrength("transmission_https_portal") = "TLS-1.2"
+encryptionStrength("media_backup_tape_001") = "AES-256"
+
+# Backup Frequency (PHI -> String)
+backupFrequency(@phi_medrec_001) = "daily"
+backupFrequency(@phi_lab_023) = "daily"
+backupFrequency(@phi_research_xyz) = "weekly"
+
+# Last Backup Date
+lastBackupDate(@phi_medrec_001) = "2024-11-27"
+lastBackupDate(@phi_lab_023) = "2024-11-27"
+lastBackupDate(@phi_research_xyz) = "2024-11-24"
+
+# Last Risk Analysis Date (Entity -> Date)
+lastRiskAnalysisDate(@HospitalA) = "2024-06-01"
+lastRiskAnalysisDate(@ClinicC) = "2024-03-15"
+lastRiskAnalysisDate(@MentalHealthClinic) = "2024-07-01"
+
+# Last Security Evaluation Date
+lastSecurityEvaluation(@HospitalA) = "2024-09-15"
+lastSecurityEvaluation(@ClinicC) = "2024-08-20"
+
+# Contingency Plan Test Date
+contingencyPlanTestDate(@HospitalA) = "2024-05-10"
+contingencyPlanTestDate(@ClinicC) = "2024-04-22"
+
+# Audit Log Retention Days (System -> Int)
+auditLogRetentionDays(@system_ehr) = 2555
+auditLogRetentionDays(@system_billing) = 2555
+auditLogRetentionDays(@system_portal) = 2555
+
+# Failed Login Attempts (Entity, System -> Int)
+failedLoginAttempts(@Dr_Smith, @system_ehr) = 0
+failedLoginAttempts(@Nurse_Karen, @system_ehr) = 1
+failedLoginAttempts("unknown_user_001", @system_ehr) = 5
+
+# Media Disposal Date
+mediaDisposalDate("media_hard_drive_old") = "2024-11-15"
+mediaDisposalDate("media_cd_rom_patient_records") = "2024-10-30"
+
+# Document Retention Years Required (String -> Int)
+retentionYearsRequired("document_privacy_policy") = 6
+retentionYearsRequired("document_training_records") = 6
+retentionYearsRequired("document_baa_template") = 6
+retentionYearsRequired("document_incident_log") = 6
+retentionYearsRequired("document_risk_analysis_2024") = 6
+
+# BAA Signature Date
+baaSignatureDate(@HospitalA, @PharmacyX) = "2023-01-15"
+baaSignatureDate(@ClinicC, @BillingCompanyZ) = "2023-06-01"
+baaSignatureDate(@HospitalA, @CloudProviderAWS) = "2024-01-10"
+
+# Days Since Breach Discovery (String -> Int)
+daysSinceBreachDiscovery(@breach_001) = 8
+daysSinceBreachDiscovery(@breach_002) = 31
+daysSinceBreachDiscovery(@breach_ransomware_attack) = 67
+
+# Clearance Level (Entity -> String)
+clearanceLevel(@Dr_Smith) = "full_phi_access"
+clearanceLevel(@Nurse_Karen) = "tpo_access"
+clearanceLevel(@ITAdmin_Hospital) = "system_admin"
+clearanceLevel(@Receptionist_Clinic) = "limited_demographic"
+clearanceLevel(@BillingClerk) = "billing_only"
+
+# Access Request Response Time (days)
+accessResponseDays(@PatientAlice, @phi_medrec_001) = 25
+accessResponseDays(@PatientBob, @phi_sud_zzz) = 45
+accessResponseDays(@PatientCarol, @phi_lab_023) = 15
+
+# Amendment Request Response Time (days)
+amendmentResponseDays(@amendment_req_001) = 50
+amendmentResponseDays(@amendment_req_002) = 35
+amendmentResponseDays(@amendment_req_denied) = 58
+
+# Accounting Request Response Time (days)
+accountingResponseDays(@accounting_req_001) = 45
+
+# Access Fee Amount (in cents)
+accessFeeCents(@PatientAlice, @phi_medrec_001) = 650
+accessFeeCents(@PatientBob, @phi_sud_zzz) = 1200
+accessFeeCents(@PatientCarol, @phi_lab_023) = 500
+
+# Accounting Period Length (in years)
+accountingPeriodYears("period_6_months") = 0
+accountingPeriodYears("period_1_year") = 1
+accountingPeriodYears("period_3_years") = 3
+accountingPeriodYears("period_6_years") = 6
+
+# Disclosure Count in Accounting
+disclosureCount(@accounting_req_001) = 12
+disclosureCount("period_1_year") = 8
+disclosureCount("period_6_months") = 5
+
+# Restriction Compliance Rate (percentage)
+restrictionComplianceRate(@HospitalA) = 98
+restrictionComplianceRate(@ClinicC) = 95
+
+# Notice Version Date
+noticeVersionDate("notice_privacy_practices_v1") = "2023-01-01"
+noticeVersionDate("notice_privacy_practices_v2") = "2024-06-01"
+
+# First Visit Date
+firstVisitDate(@PatientAlice, @HospitalA) = "2023-05-10"
+firstVisitDate(@PatientBob, @ClinicC) = "2024-01-15"
+firstVisitDate(@PatientCarol, @ClinicC) = "2024-03-22"
+
+# Enrollment Date (for health plans)
+enrollmentDate(@PatientAlice, @HealthPlanX) = "2023-01-01"
+enrollmentDate(@PatientBob, @HealthPlanX) = "2024-01-01"
+
+# Marketing Remuneration Amount (in dollars)
+marketingRemunerationAmount("marketing_comm_drug_promotion") = 5000
+marketingRemunerationAmount("marketing_comm_wellness_program") = 2500
+
+# Sale of PHI Amount (in dollars)
+saleAmount("sale_research_dataset") = 50000
+saleAmount("sale_marketing_list") = 10000
+
+# Fundraising Opt-Out Count
+fundraisingOptOutCount(@HospitalA) = 234
+fundraisingOptOutCount(@ClinicC) = 87
+
+# Amendment Requests Per Year
+amendmentRequestsPerYear(@HospitalA) = 45
+amendmentRequestsPerYear(@ClinicC) = 12
+
+# Access Requests Per Year
+accessRequestsPerYear(@HospitalA) = 892
+accessRequestsPerYear(@ClinicC) = 156
+
+# Accounting Requests Per Year
+accountingRequestsPerYear(@HospitalA) = 23
+accountingRequestsPerYear(@ClinicC) = 8
+
+# Restriction Requests Per Year
+restrictionRequestsPerYear(@HospitalA) = 67
+restrictionRequestsPerYear(@ClinicC) = 15
+
+# Days Since Amendment Request
+daysSinceAmendmentRequest(@amendment_req_001) = 50
+daysSinceAmendmentRequest(@amendment_req_002) = 35
+
+# Days Since Accounting Request
+daysSinceAccountingRequest(@accounting_req_001) = 45
+
+# Minor Age
+minorAge(@Minor_Emancipated) = 17
+minorAge(@Minor_Unemancipated) = 15
+minorAge(@ChildMinor) = 14
+
+# Death Date (for decedents)
+deathDate(@PatientDeceased_A) = "2022-08-15"
+deathDate(@PatientDeceased_B) = "2019-11-30"
+
+# Restriction Active Since (Date)
+restrictionActiveSince(@restriction_agreed_001) = "2024-01-15"
+
+# Complaint Date
+complaintDate(@complaint_001) = "2024-10-20"
+complaintDate(@complaint_privacy_violation) = "2024-09-15"
+complaintDate(@complaint_access_denied) = "2024-11-01"
+
+# Complaint Resolution Time (days)
+complaintResolutionDays(@complaint_001) = 30
+complaintResolutionDays(@complaint_privacy_violation) = 45
+
+# Summary Page Count
+summaryPageCount("summary_medical_record") = 5
+summaryPageCount("summary_treatment_history") = 3
+
+# Full Record Page Count
+fullRecordPageCount(@phi_medrec_001) = 47
+fullRecordPageCount(@phi_lab_023) = 12
+fullRecordPageCount(@phi_psych_aaa) = 83

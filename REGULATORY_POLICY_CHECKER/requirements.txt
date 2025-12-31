@@ -1,0 +1,12 @@
+openai
+anthropic
+python-dotenv
+streamlit 
+crewai 
+langchain-anthropic 
+anthropic 
+pandas
+numpy
+requests
+pdfplumber
+PyPDF2

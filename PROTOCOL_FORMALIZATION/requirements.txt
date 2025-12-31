@@ -1,0 +1,12 @@
+streamlit==1.29.0
+anthropic==0.18.1
+openai==1.12.0
+google-generativeai==0.3.2
+python-dotenv==1.0.0
+pandas==2.1.4
+sqlalchemy==2.0.25
+pydantic==2.5.3
+PyPDF2==3.0.1
+tiktoken 
+rapidfuzz 
+sentence-transformers

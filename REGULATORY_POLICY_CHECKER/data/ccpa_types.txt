@@ -1,0 +1,62 @@
+# AUTO-GENERATED TYPE SYSTEM FOR CCPA
+# Generated: 2025-12-06T11:11:11.533915
+
+PREDICATES
+True : Bool
+False : Bool
+accessedData : Entity Entity -> Bool
+business : Entity -> Bool
+collectedData : Entity Entity Entity -> Bool
+collectsData : Entity Entity Entity -> Bool
+confidentialRecord : Entity Entity Entity -> Bool
+consumer : Entity -> Bool
+consumerExpectation : Entity Entity -> Bool
+cooperatesWithBusiness : Entity Entity -> Bool
+deletesData : Entity Entity Entity -> Bool
+deletesFromRecords : Entity Entity -> Bool
+deletionImpairstResearch : Entity Entity -> Bool
+deletionRequest : Entity -> Bool
+directedByBusiness : Entity -> Bool
+disclose : Entity -> Bool
+disclosesData : Entity Entity Entity -> Bool
+engagesInResearch : Entity Entity -> Bool
+hasDeleteRight : Entity Entity Entity -> Bool
+hasInformedConsent : Entity Entity -> Bool
+hasRightToCorrect : Entity Entity Entity -> Bool
+inaccurate : Entity -> Bool
+inaccurateData : Entity -> Bool
+maintains : Entity Entity Entity -> Bool
+maintainsRecord : Entity Entity -> Bool
+mustCorrectData : Entity Entity -> Bool
+mustDelete : Entity Entity -> Bool
+mustNotify : Entity Entity -> Bool
+notifiesServiceProviders : Entity Entity -> Bool
+notifiesSubcontractors : Entity Entity Entity -> Bool
+notifiesThirdParties : Entity Entity -> Bool
+permittedUse : Entity Entity Entity -> Bool
+personalInformation : Entity -> Bool
+processesData : Entity Entity Entity -> Bool
+provisionContext : Entity Entity -> Bool
+receivesVerifiableRequest : Entity Entity Entity -> Bool
+requestType : Entity Entity -> Bool
+requiredToComply : Entity Entity -> Bool
+requiresDeletion : Entity Entity -> Bool
+researchConformsToLaws : Entity -> Bool
+retainsData : Entity Entity Entity -> Bool
+serviceProvider : Entity -> Bool
+submittedDirectly : Entity Entity Entity -> Bool
+thirdParty : Entity -> Bool
+tradeSecret : Entity -> Bool
+useCommerciallyReasonableEfforts : Entity -> Bool
+usesData : Entity Entity Entity -> Bool
+verifiableRequest : Entity Entity Entity -> Bool
+
+CONSTANTS
+@BusinessPurpose : Purpose
+@LegalCompliance : Purpose
+@PermissiblePurpose : Purpose
+@PreventSale : Purpose
+
+FUNCTIONS
+# Add custom functions here if needed
+# Example: age : Entity -> Int

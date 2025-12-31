@@ -1,0 +1,1649 @@
+regulation HIPAA version "2024.0" effective_date "2013-09-23"
+
+type declaration starts
+type Entity
+type PHI
+type Auth
+type Purpose
+type Date
+type Time
+type Int
+type String
+type Bool
+type System
+type Safeguard
+type Risk
+type Incident
+type Access
+type Encryption
+type AuditLog
+type Authorization
+type Amendment
+type Accounting
+type Restriction
+type Complaint
+type Marketing
+type Fundraising
+type Sale
+type declaration ends
+
+policy starts
+
+@["§164.502(a)(1)(i) - General rule: Permitted uses and disclosures"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and disclose(ce, recipient, phi, purpose)
+  implies
+  (permittedUseOrDisclosure(ce, recipient, phi, purpose)
+   or hasAuthorization(ce, recipient, phi)
+   or requiredByLaw(purpose))
+;
+
+@["§164.502(a)(1)(ii) - Minimum necessary applies"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and disclose(ce, recipient, phi, purpose)
+  and not (purposeIsPurpose(purpose, @Treatment) 
+           or purposeIsPurpose(purpose, @PaymentToProvider)
+           or isDisclosureToPatient(recipient, phi))
+  implies
+  minimumNecessary(ce, recipient, phi, purpose)
+;
+
+@["§164.506(a) - Consent for TPO not required but permitted"]
+forall ce, patient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and (purposeIsPurpose(purpose, @Treatment) 
+       or purposeIsPurpose(purpose, @Payment)
+       or purposeIsPurpose(purpose, @HealthcareOperations))
+  implies
+  permittedUseOrDisclosure(ce, patient, phi, purpose)
+;
+
+@["§164.508(a)(1) - Authorization required for non-TPO"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and disclose(ce, recipient, phi, purpose)
+  and not (purposeIsPurpose(purpose, @Treatment) 
+           or purposeIsPurpose(purpose, @Payment)
+           or purposeIsPurpose(purpose, @HealthcareOperations))
+  and not requiredByLaw(purpose)
+  implies
+  hasAuthorization(ce, recipient, phi)
+;
+
+@["§164.508(b)(3) - Psychotherapy notes require specific authorization"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and isPsychotherapyNotes(phi)
+  and disclose(ce, recipient, phi, purpose)
+  and not (purposeIsPurpose(purpose, @OriginatorTreatment)
+           or purposeIsPurpose(purpose, @TrainingProgram)
+           or purposeIsPurpose(purpose, @DefendLegalAction))
+  implies
+  hasAuthorizationPsychNotes(ce, recipient, phi)
+;
+
+@["§164.510(b) - Disclosure to family/friends involved in care"]
+forall ce, patient, family, phi.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and familyMember(family, patient)
+  and involvedInCare(family, patient)
+  and not objectsToDisclosure(patient, family)
+  implies
+  permittedUseOrDisclosure(ce, family, phi, @InformalCaregiving)
+;
+
+@["§164.510(b)(3) - Emergency disclosure to family"]
+forall ce, patient, family, phi.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and familyMember(family, patient)
+  and incapacitated(patient)
+  and inBestInterest(patient, family)
+  implies
+  permittedUseOrDisclosure(ce, family, phi, @Emergency)
+;
+
+@["§164.512(a) - Required by law disclosures"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and requiredByLaw(purpose)
+  and disclose(ce, recipient, phi, purpose)
+  implies
+  permittedUseOrDisclosure(ce, recipient, phi, purpose)
+;
+
+@["§164.512(b) - Public health activities"]
+forall ce, pha, phi, purpose.
+  coveredEntity(ce)
+  and publicHealthAuthority(pha)
+  and protectedHealthInfo(phi)
+  and purposeIsPurpose(purpose, @PublicHealth)
+  and authorizedByLaw(pha, purpose)
+  implies
+  permittedUseOrDisclosure(ce, pha, phi, purpose)
+;
+
+@["§164.512(c) - Victims of abuse, neglect, or domestic violence"]
+forall ce, authority, phi, patient.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and (victimOfAbuse(patient) or victimOfNeglect(patient) or victimOfDomesticViolence(patient))
+  and (hasAuthorization(ce, authority, phi) 
+       or requiredByLaw(@AbuseReporting)
+       or (agreesToReport(patient) and informedOfReport(patient)))
+  implies
+  permittedUseOrDisclosure(ce, authority, phi, @AbuseReporting)
+;
+
+@["§164.512(d) - Health oversight activities"]
+forall ce, hoa, phi, purpose.
+  coveredEntity(ce)
+  and healthOversightAgency(hoa)
+  and protectedHealthInfo(phi)
+  and purposeIsPurpose(purpose, @HealthOversight)
+  and authorizedByLaw(hoa, purpose)
+  implies
+  permittedUseOrDisclosure(ce, hoa, phi, purpose)
+;
+
+@["§164.512(e) - Judicial and administrative proceedings"]
+forall ce, court, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and (hasCourtOrder(court, phi) 
+       or (hasSubpoena(court, phi) and satisfactoryAssurances(court, phi)))
+  and purposeIsPurpose(purpose, @JudicialProceeding)
+  implies
+  permittedUseOrDisclosure(ce, court, phi, purpose)
+;
+
+@["§164.512(f) - Law enforcement purposes"]
+forall ce, leo, phi, purpose.
+  coveredEntity(ce)
+  and lawEnforcementOfficial(leo)
+  and protectedHealthInfo(phi)
+  and purposeIsPurpose(purpose, @LawEnforcement)
+  and (hasCourtOrder(leo, phi)
+       or hasWarrant(leo, phi)
+       or (hasAdminRequest(leo, phi) and relevantAndMaterialInfo(phi))
+       or identifySuspect(purpose))
+  implies
+  permittedUseOrDisclosure(ce, leo, phi, purpose)
+;
+
+@["§164.512(f)(6) - Crime on premises"]
+forall ce, leo, phi.
+  coveredEntity(ce)
+  and lawEnforcementOfficial(leo)
+  and protectedHealthInfo(phi)
+  and crimeOnPremises(ce)
+  and necessaryToAlertLE(phi)
+  implies
+  permittedUseOrDisclosure(ce, leo, phi, @CrimeOnPremises)
+;
+
+@["§164.512(j) - Serious threat to health or safety"]
+forall ce, recipient, phi, patient.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and seriousThreat(patient)
+  and (ableToPreventThreat(recipient) or isLawEnforcement(recipient))
+  and goodFaithBelief(ce, patient)
+  implies
+  permittedUseOrDisclosure(ce, recipient, phi, @SeriousThreat)
+;
+
+@["§164.512(i) - Research with authorization"]
+forall ce, researcher, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and purposeIsPurpose(purpose, @Research)
+  and hasAuthorization(ce, researcher, phi)
+  implies
+  permittedUseOrDisclosure(ce, researcher, phi, purpose)
+;
+
+@["§164.512(i)(1)(i) - Research with IRB/Privacy Board waiver"]
+forall ce, researcher, phi, purpose, irb.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and purposeIsPurpose(purpose, @Research)
+  and irbApproval(irb, researcher, purpose)
+  and waiverOfAuthorization(irb)
+  and minimumNecessary(ce, researcher, phi, purpose)
+  implies
+  permittedUseOrDisclosure(ce, researcher, phi, purpose)
+;
+
+@["§164.512(i)(1)(iii) - Research on decedents"]
+forall ce, researcher, phi, patient, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and hasRecord(patient, phi)
+  and deceased(patient)
+  and purposeIsPurpose(purpose, @Research)
+  and representationOfNeed(researcher)
+  implies
+  permittedUseOrDisclosure(ce, researcher, phi, purpose)
+;
+
+@["§164.514(a) - De-identified information not PHI"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and deidentified(phi)
+  implies
+  permittedUseOrDisclosure(ce, recipient, phi, purpose)
+;
+
+@["§164.514(b)(1) - Safe harbor de-identification"]
+forall phi.
+  protectedHealthInfo(phi)
+  and removedAllIdentifiers(phi)
+  and noActualKnowledge(phi)
+  implies
+  deidentified(phi)
+;
+
+@["§164.514(e) - Limited data set"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and limitedDataSet(phi)
+  and (purposeIsPurpose(purpose, @Research)
+       or purposeIsPurpose(purpose, @PublicHealth)
+       or purposeIsPurpose(purpose, @HealthcareOperations))
+  and hasDataUseAgreement(ce, recipient, phi)
+  implies
+  permittedUseOrDisclosure(ce, recipient, phi, purpose)
+;
+
+@["§164.520(a) - Notice of privacy practices required"]
+forall ce, patient.
+  coveredEntity(ce)
+  and receivesServices(patient, ce)
+  implies
+  mustProvideNotice(ce, patient)
+;
+
+@["§164.522(a) - Right to request restrictions"]
+forall ce, patient, phi.
+  coveredEntity(ce)
+  and hasRecord(patient, phi)
+  and requestsRestriction(patient, phi)
+  and paidOutOfPocket(patient, phi)
+  and not requiredByLaw(@Disclosure)
+  implies
+  mustComplyWithRestriction(ce, patient, phi)
+;
+
+@["§164.524(a) - Right of access to PHI"]
+forall ce, patient, phi.
+  coveredEntity(ce)
+  and hasRecord(patient, phi)
+  and requestsAccess(patient, phi)
+  and not (isPsychotherapyNotes(phi) 
+           or compiledForLegalProceeding(phi)
+           or prohibitedByLaw(phi))
+  implies
+  mustProvideAccess(ce, patient, phi)
+;
+
+@["§164.526(a) - Right to amend PHI"]
+forall ce, patient, phi.
+  coveredEntity(ce)
+  and hasRecord(patient, phi)
+  and requestsAmendment(patient, phi)
+  and (inaccurate(phi) or incomplete(phi))
+  and createdBy(ce, phi)
+  implies
+  mustAmendOrProvideReason(ce, patient, phi)
+;
+
+@["§164.528(a) - Right to accounting of disclosures"]
+forall ce, patient, phi.
+  coveredEntity(ce)
+  and hasRecord(patient, phi)
+  and requestsAccounting(patient)
+  and withinSixYears(patient)
+  and not (purposeIsPurpose(@Disclosure, @Treatment)
+           or purposeIsPurpose(@Disclosure, @Payment)
+           or purposeIsPurpose(@Disclosure, @HealthcareOperations)
+           or toIndividual(patient))
+  implies
+  mustProvideAccounting(ce, patient, phi)
+;
+
+@["§164.530(i) - Sanctions for violations"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and violatesPolicy(workforce)
+  implies
+  mustApplySanctions(ce, workforce)
+;
+
+@["§164.530(j) - Mitigation of harmful effects"]
+forall ce, phi.
+  coveredEntity(ce)
+  and unauthorizedDisclosure(phi)
+  implies
+  mustMitigateHarm(ce, phi)
+;
+
+@["§164.308(a)(1)(i) - Security Management Process Required"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (hasSecurityManagementProcess(ce)
+   and conductsRiskAnalysis(ce)
+   and hasRiskManagementPlan(ce)
+   and hasSanctionPolicy(ce)
+   and hasReviewProcess(ce))
+;
+
+@["§164.308(a)(1)(ii)(A) - Risk Analysis Required"]
+forall ce, system, phi.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and storesEPHI(system, phi)
+  and operatesSystem(ce, system)
+  implies
+  hasRiskAnalysis(ce, system)
+;
+
+@["§164.308(a)(1)(ii)(B) - Risk Management Required"]
+forall ce, risk, system.
+  coveredEntity(ce)
+  and identifiedRisk(risk, system)
+  and operatesSystem(ce, system)
+  implies
+  (hasMitigationPlan(ce, risk)
+   or acceptedRisk(ce, risk)
+   or transferredRisk(ce, risk))
+;
+
+@["§164.308(a)(2) - Assigned Security Responsibility"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  hasSecurityOfficial(ce)
+;
+
+@["§164.308(a)(3)(i) - Workforce Security"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  implies
+  (hasAuthorizationProcedures(ce, workforce)
+   and hasWorkforceClearance(ce, workforce)
+   and hasTerminationProcedures(ce, workforce))
+;
+
+@["§164.308(a)(3)(ii)(A) - Authorization/Supervision"]
+forall ce, workforce, system.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and accessesSystem(workforce, system)
+  implies
+  authorizedToAccess(ce, workforce, system)
+;
+
+@["§164.308(a)(3)(ii)(B) - Workforce Clearance Procedure"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and accessesEPHI(workforce)
+  implies
+  hasClearanceLevel(workforce)
+;
+
+@["§164.308(a)(3)(ii)(C) - Termination Procedures"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and formerWorkforce(workforce, ce)
+  implies
+  (accessRevoked(workforce)
+   and keysReturned(workforce)
+   and accountsDisabled(workforce))
+;
+
+@["§164.308(a)(4)(i) - Information Access Management"]
+forall ce, workforce, phi.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and accessesEPHI(workforce)
+  implies
+  hasAccessPolicy(ce, workforce)
+;
+
+@["§164.308(a)(4)(ii)(B) - Access Authorization"]
+forall ce, workforce, system.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and requestsAccess(workforce, system)
+  implies
+  (accessGranted(workforce, system) 
+   implies authorizedByRole(workforce, system))
+;
+
+@["§164.308(a)(4)(ii)(C) - Access Establishment and Modification"]
+forall ce, workforce, system, access_level.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and hasAccessLevel(workforce, system, access_level)
+  implies
+  (reviewedAccess(ce, workforce, system)
+   and documentedAccess(ce, workforce, system))
+;
+
+@["§164.308(a)(5)(i) - Security Awareness and Training"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  implies
+  (receivedSecurityTraining(workforce)
+   and trainingDocumented(workforce))
+;
+
+@["§164.308(a)(5)(ii)(A) - Security Reminders"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  implies
+  receivesSecurityReminders(workforce)
+;
+
+@["§164.308(a)(5)(ii)(B) - Protection from Malicious Software"]
+forall ce, system.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and operatesSystem(ce, system)
+  implies
+  (hasMalwareProtection(system)
+   and malwareProtectionUpdated(system))
+;
+
+@["§164.308(a)(5)(ii)(C) - Log-in Monitoring"]
+forall ce, system.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and operatesSystem(ce, system)
+  implies
+  monitorsLoginAttempts(system)
+;
+
+@["§164.308(a)(5)(ii)(D) - Password Management"]
+forall ce, workforce, system.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and accessesSystem(workforce, system)
+  implies
+  (hasPasswordPolicy(ce)
+   and passwordMeetsComplexity(workforce, system)
+   and passwordChangedRegularly(workforce, system))
+;
+
+@["§164.308(a)(6)(i) - Security Incident Procedures"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  hasIncidentResponsePlan(ce)
+;
+
+@["§164.308(a)(6)(ii) - Response and Reporting"]
+forall ce, incident.
+  coveredEntity(ce)
+  and securityIncident(incident, ce)
+  implies
+  (incidentIdentified(incident)
+   and incidentDocumented(incident)
+   and incidentMitigated(incident)
+   and incidentReported(incident))
+;
+
+@["§164.308(a)(7)(i) - Contingency Plan"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (hasDataBackupPlan(ce)
+   and hasDisasterRecoveryPlan(ce)
+   and hasEmergencyModeOperation(ce)
+   and hasTestingProcedures(ce)
+   and hasApplicationsCriticality(ce))
+;
+
+@["§164.308(a)(7)(ii)(A) - Data Backup Plan"]
+forall ce, phi.
+  coveredEntity(ce)
+  and storesEPHI(ce, phi)
+  implies
+  (hasBackup(phi)
+   and backupTested(phi)
+   and backupRecoverable(phi))
+;
+
+@["§164.308(a)(7)(ii)(B) - Disaster Recovery Plan"]
+forall ce, disaster.
+  coveredEntity(ce)
+  and disasterOccurs(disaster, ce)
+  implies
+  canRestoreEPHI(ce)
+;
+
+@["§164.308(a)(7)(ii)(E) - Testing Procedures"]
+forall ce.
+  coveredEntity(ce)
+  and hasContingencyPlan(ce)
+  implies
+  (contingencyPlanTested(ce)
+   and testingDocumented(ce))
+;
+
+@["§164.308(a)(8) - Evaluation"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (conductsPeriodicEvaluation(ce)
+   and evaluationDocumented(ce))
+;
+
+@["§164.308(b)(1) - Business Associate Contracts"]
+forall ce, ba, phi.
+  coveredEntity(ce)
+  and businessAssociate(ba)
+  and disclosesEPHI(ce, ba, phi)
+  implies
+  (hasBAA(ce, ba)
+   and baaRequiresSafeguards(ce, ba)
+   and baaRequiresReporting(ce, ba)
+   and baaAllowsTermination(ce, ba))
+;
+
+@["§164.310(a)(1) - Facility Access Controls"]
+forall ce, facility.
+  coveredEntity(ce)
+  and operatesFacility(ce, facility)
+  and housingEPHI(facility)
+  implies
+  (hasAccessControls(facility)
+   and limitsPhysicalAccess(facility)
+   and validatesAccess(facility))
+;
+
+@["§164.310(a)(2)(i) - Contingency Operations"]
+forall ce, facility, emergency.
+  coveredEntity(ce)
+  and operatesFacility(ce, facility)
+  and emergencyOccurs(emergency, facility)
+  implies
+  allowsEmergencyAccess(facility)
+;
+
+@["§164.310(a)(2)(ii) - Facility Security Plan"]
+forall ce, facility.
+  coveredEntity(ce)
+  and operatesFacility(ce, facility)
+  and housingEPHI(facility)
+  implies
+  hasFacilitySecurityPlan(facility)
+;
+
+@["§164.310(a)(2)(iii) - Access Control and Validation"]
+forall ce, facility, person.
+  coveredEntity(ce)
+  and operatesFacility(ce, facility)
+  and housingEPHI(facility)
+  and entersArea(person, facility)
+  implies
+  (validatedIdentity(person)
+   and authorizedForArea(person, facility))
+;
+
+@["§164.310(a)(2)(iv) - Maintenance Records"]
+forall ce, facility, repair.
+  coveredEntity(ce)
+  and operatesFacility(ce, facility)
+  and maintenancePerformed(repair, facility)
+  implies
+  maintenanceDocumented(repair)
+;
+
+@["§164.310(b) - Workstation Use"]
+forall ce, workstation, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and usesWorkstation(workforce, workstation)
+  and accessesEPHI(workforce)
+  implies
+  (hasWorkstationPolicy(ce)
+   and workstationProperlyLocated(workstation)
+   and workstationSecured(workstation))
+;
+
+@["§164.310(c) - Workstation Security"]
+forall ce, workstation.
+  coveredEntity(ce)
+  and ownsWorkstation(ce, workstation)
+  and accessesEPHI_workstation(workstation)
+  implies
+  (physicalSafeguardsImplemented(workstation)
+   and unauthorizedAccessPrevented(workstation))
+;
+
+@["§164.310(d)(1) - Device and Media Controls"]
+forall ce, media, phi.
+  coveredEntity(ce)
+  and containsEPHI(media, phi)
+  implies
+  (hasDisposalProcedures(ce, media)
+   and hasMediaReuseProcedures(ce, media)
+   and hasAccountabilityProcedures(ce, media)
+   and hasDataBackupProcedures(ce, media))
+;
+
+@["§164.310(d)(2)(i) - Disposal"]
+forall ce, media, phi.
+  coveredEntity(ce)
+  and containsEPHI(media, phi)
+  and disposingOf(ce, media)
+  implies
+  (dataUnrecoverable(media)
+   or physicallyDestroyed(media))
+;
+
+@["§164.310(d)(2)(ii) - Media Re-use"]
+forall ce, media, phi.
+  coveredEntity(ce)
+  and containsEPHI(media, phi)
+  and reusingMedia(ce, media)
+  implies
+  phiRemovedBeforeReuse(media)
+;
+
+@["§164.310(d)(2)(iii) - Accountability"]
+forall ce, media.
+  coveredEntity(ce)
+  and containsEPHI(media, @AnyPHI)
+  implies
+  (mediaInventoryMaintained(ce, media)
+   and mediaMovementsTracked(media))
+;
+
+@["§164.310(d)(2)(iv) - Data Backup and Storage"]
+forall ce, media, phi.
+  coveredEntity(ce)
+  and backupMedia(media, phi)
+  implies
+  (backupStoredSecurely(media)
+   and backupRetrievable(media))
+;
+
+@["§164.312(a)(1) - Access Control"]
+forall ce, system, workforce.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and operatesSystem(ce, system)
+  implies
+  (hasUniqueUserID(system)
+   and hasEmergencyAccess(system)
+   and hasAutomaticLogoff(system)
+   and hasEncryptionDecryption(system))
+;
+
+@["§164.312(a)(2)(i) - Unique User Identification"]
+forall ce, system, workforce.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and accessesSystem(workforce, system)
+  implies
+  hasUniqueIdentifier(workforce, system)
+;
+
+@["§164.312(a)(2)(ii) - Emergency Access Procedure"]
+forall ce, system, emergency.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and emergencyOccurs(emergency, ce)
+  and needsAccess(emergency, system)
+  implies
+  emergencyAccessAvailable(system)
+;
+
+@["§164.312(a)(2)(iii) - Automatic Logoff"]
+forall ce, system, session.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and activeSession(session, system)
+  and sessionInactive(session)
+  implies
+  sessionTerminated(session)
+;
+
+@["§164.312(a)(2)(iv) - Encryption and Decryption"]
+forall ce, system, phi.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and storesEPHI(system, phi)
+  and encryptionAddressable(system)
+  implies
+  (encrypted(phi) or documentedReason(ce, phi))
+;
+
+@["§164.312(b) - Audit Controls"]
+forall ce, system, activity.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and systemActivity(activity, system)
+  implies
+  (activityLogged(activity)
+   and logReviewable(activity)
+   and logProtected(activity))
+;
+
+@["§164.312(c)(1) - Integrity"]
+forall ce, system, phi.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and storesEPHI(system, phi)
+  implies
+  (hasIntegrityControls(system)
+   and unauthorizedAlterationPrevented(phi))
+;
+
+@["§164.312(c)(2) - Mechanism to Authenticate ePHI"]
+forall ce, phi.
+  coveredEntity(ce)
+  and electronicPHI(phi)
+  implies
+  (hasAuthenticationMechanism(phi)
+   or documentedNoMechanism(ce, phi))
+;
+
+@["§164.312(d) - Person or Entity Authentication"]
+forall ce, system, user.
+  coveredEntity(ce)
+  and ephi_system(system)
+  and attemptsAccess(user, system)
+  implies
+  (identityVerified(user, system)
+   and authenticationSuccessful(user, system))
+;
+
+@["§164.312(e)(1) - Transmission Security"]
+forall ce, phi, transmission.
+  coveredEntity(ce)
+  and electronicPHI(phi)
+  and transmitsEPHI(transmission, phi)
+  implies
+  (hasIntegrityControls(transmission)
+   and hasEncryption(transmission))
+;
+
+@["§164.312(e)(2)(i) - Integrity Controls"]
+forall ce, transmission, phi.
+  coveredEntity(ce)
+  and transmitsEPHI(transmission, phi)
+  implies
+  (unauthorizedModificationDetected(transmission)
+   or integrityVerified(transmission))
+;
+
+@["§164.312(e)(2)(ii) - Encryption"]
+forall ce, transmission, phi.
+  coveredEntity(ce)
+  and transmitsEPHI(transmission, phi)
+  and transmissionOverInternet(transmission)
+  implies
+  (transmissionEncrypted(transmission)
+   or documentedReasonNoEncryption(ce, transmission))
+;
+
+@["§164.530(a)(1) - Personnel Designations"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (hasPrivacyOfficial(ce)
+   and hasContactPerson(ce))
+;
+
+@["§164.530(b)(1) - Training"]
+forall ce, workforce.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  implies
+  receivedPrivacyTraining(workforce)
+;
+
+@["§164.530(b)(2) - Training Documentation"]
+forall ce, workforce, training.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and receivedPrivacyTraining(workforce)
+  implies
+  trainingDocumented(workforce)
+;
+
+@["§164.530(c)(1) - Safeguards"]
+forall ce, phi.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  implies
+  (administrativeSafeguards(ce, phi)
+   and physicalSafeguards(ce, phi)
+   and technicalSafeguards(ce, phi))
+;
+
+@["§164.530(d)(1) - Complaints to the Covered Entity"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (hasComplaintProcess(ce)
+   and complaintsDocumented(ce))
+;
+
+@["§164.530(e)(1) - Sanctions"]
+forall ce, workforce, violation.
+  coveredEntity(ce)
+  and workforceOf(workforce, ce)
+  and privacyViolation(workforce, violation)
+  implies
+  sanctionsApplied(ce, workforce)
+;
+
+@["§164.530(f) - Mitigation"]
+forall ce, harm, phi.
+  coveredEntity(ce)
+  and unauthorizedUse(phi)
+  and harmfulEffect(harm, phi)
+  implies
+  mitigationAttempted(ce, harm)
+;
+
+@["§164.530(g) - Refraining from Intimidation"]
+forall ce, individual.
+  coveredEntity(ce)
+  and exercisesRights(individual)
+  implies
+  not intimidated(individual, ce)
+;
+
+@["§164.530(h) - Waiver of Rights"]
+forall ce, individual, waiver.
+  coveredEntity(ce)
+  and requestsWaiver(ce, individual, waiver)
+  implies
+  not waiverAsCondition(ce, waiver)
+;
+
+@["§164.530(i)(1) - Policies and Procedures"]
+forall ce.
+  coveredEntity(ce)
+  implies
+  (hasPrivacyPolicies(ce)
+   and policiesImplemented(ce)
+   and policiesMaintained(ce))
+;
+
+@["§164.530(j)(1) - Documentation Requirements"]
+forall ce, action.
+  coveredEntity(ce)
+  and privacyAction(action, ce)
+  implies
+  (actionDocumented(action)
+   and documentRetained(action, 6))
+;
+
+@["§164.530(j)(2) - Retention"]
+forall ce, document.
+  coveredEntity(ce)
+  and privacyDocument(document, ce)
+  implies
+  documentRetainedYears(document, 6)
+;
+
+@["§164.402 - Breach Definition"]
+forall phi, acquisition.
+  protectedHealthInfo(phi)
+  and unauthorizedAcquisition(acquisition, phi)
+  and not (limitedDataSet(phi) or deidentified(phi))
+  and not goodFaithAccess(acquisition)
+  and not inadvertentDisclosure(acquisition)
+  and not unableToRetain(acquisition)
+  implies
+  isBreach(acquisition)
+;
+
+@["§164.404(a) - Notification to Individuals"]
+forall ce, breach, individual, phi.
+  coveredEntity(ce)
+  and isBreach(breach)
+  and affectsIndividual(breach, individual, phi)
+  implies
+  (notifyIndividual(ce, individual, breach)
+   and notificationWithin60Days(ce, individual, breach))
+;
+
+@["§164.404(c) - Content of Notification"]
+forall ce, individual, breach.
+  coveredEntity(ce)
+  and notifyIndividual(ce, individual, breach)
+  implies
+  (notificationIncludesDescription(breach)
+   and notificationIncludesTypesOfPHI(breach)
+   and notificationIncludesSteps(breach)
+   and notificationIncludesMitigation(breach)
+   and notificationIncludesContactInfo(breach))
+;
+
+@["§164.406(a) - Notification to Media"]
+forall ce, breach.
+  coveredEntity(ce)
+  and isBreach(breach)
+  and affects500OrMore(breach)
+  implies
+  notifyMedia(ce, breach)
+;
+
+@["§164.408(a) - Notification to Secretary"]
+forall ce, breach.
+  coveredEntity(ce)
+  and isBreach(breach)
+  implies
+  (notifySecretary(ce, breach)
+   and (affects500OrMore(breach) implies notifyWithin60Days(ce, breach))
+   and (affectsFewerThan500(breach) implies notifyAnnually(ce, breach)))
+;
+
+@["§164.410(a) - BA Notification to CE"]
+forall ba, ce, breach.
+  businessAssociate(ba)
+  and coveredEntity(ce)
+  and hasBAA(ce, ba)
+  and breachAtBA(breach, ba)
+  implies
+  notifyCE(ba, ce, breach)
+;
+
+@["§164.414(a) - Administrative Requirements"]
+forall ce, breach.
+  coveredEntity(ce)
+  and isBreach(breach)
+  implies
+  (riskAssessmentConducted(breach)
+   and breachDocumented(breach)
+   and documentationRetained(breach, 6))
+;
+
+@["§164.524(a)(1) - Right of access to inspect and obtain PHI"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsAccess(individual, phi)
+  and not (isPsychotherapyNotes(phi)
+           or informationCompiledForLegalProceeding(phi)
+           or prohibitedByLaw(phi)
+           or prisonersException(individual)
+           or cliaCertifiedLab(ce, phi)
+           or researchStudyInProgress(phi))
+  implies
+  mustProvideAccess(ce, individual, phi)
+;
+
+@["§164.524(a)(2)(i) - Psychotherapy notes exception to access"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsAccess(individual, phi)
+  and isPsychotherapyNotes(phi)
+  implies
+  not mustProvideAccess(ce, individual, phi)
+;
+
+@["§164.524(a)(2)(ii) - Information compiled for legal proceedings exception"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsAccess(individual, phi)
+  and informationCompiledForLegalProceeding(phi)
+  implies
+  mayDenyAccess(ce, individual, phi)
+;
+
+@["§164.524(a)(3)(i) - Unreviewable grounds for denial - psychotherapy notes"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and isPsychotherapyNotes(phi)
+  implies
+  unreviewableDenial(ce, individual, phi)
+;
+
+@["§164.524(a)(3)(ii) - Unreviewable grounds - prohibited by law"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and prohibitedByLaw(phi)
+  implies
+  unreviewableDenial(ce, individual, phi)
+;
+
+@["§164.524(a)(3)(iii) - Unreviewable grounds - CLIA exception"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and cliaCertifiedLab(ce, phi)
+  and not permitsCLIAAccess(phi)
+  implies
+  unreviewableDenial(ce, individual, phi)
+;
+
+@["§164.524(b)(1) - Timely action on access requests"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  implies
+  (actWithin30Days(ce, individual, phi)
+   or (needsExtension(ce) and notifyExtension(ce, individual) and actWithin60Days(ce, individual, phi)))
+;
+
+@["§164.524(b)(2)(i) - Denial must be in writing"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and deniesAccess(ce, individual, phi)
+  implies
+  denialInWriting(ce, individual, phi)
+;
+
+@["§164.524(b)(2)(v) - Right to review of denial"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and deniesAccess(ce, individual, phi)
+  and reviewableDenial(ce, individual, phi)
+  implies
+  (rightToReview(individual, phi)
+   and reviewByLicensedHealthcareProfessional(ce, phi))
+;
+
+@["§164.524(c)(2) - Form and format of access"]
+forall ce, individual, phi, format.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and requestsFormat(individual, format)
+  and formatReadilyProducible(ce, format)
+  implies
+  provideInRequestedFormat(ce, individual, phi, format)
+;
+
+@["§164.524(c)(3)(i) - Electronic access to EHR"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and maintainedInEHR(phi)
+  and requestsElectronicCopy(individual)
+  implies
+  provideElectronicCopy(ce, individual, phi)
+;
+
+@["§164.524(c)(3)(ii) - Direct to third party"]
+forall ce, individual, phi, third_party.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and directsToThirdParty(individual, third_party, phi)
+  implies
+  transmitToThirdParty(ce, third_party, phi)
+;
+
+@["§164.524(c)(4) - Fees for access"]
+forall ce, individual, phi, fee.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and chargesFee(ce, fee)
+  implies
+  (feeCoversLaborOnly(fee)
+   and feeCoversSupplies(fee)
+   and feeCoversPostage(fee)
+   and feeReasonable(fee))
+;
+
+@["§164.524(d)(1) - Summary instead of full access"]
+forall ce, individual, phi, summary.
+  coveredEntity(ce)
+  and requestsAccess(individual, phi)
+  and agreesToSummary(individual, summary)
+  and agreesToSummaryFee(individual)
+  implies
+  mayProvideSummary(ce, individual, summary)
+;
+
+@["§164.526(a)(1) - Right to amend"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsAmendment(individual, phi)
+  and createdByEntity(ce, phi)
+  implies
+  (mustAmend(ce, individual, phi)
+   or provideDenialReason(ce, individual, phi))
+;
+
+@["§164.526(a)(2)(i) - Grounds for denial - not created by CE"]
+forall ce, individual, phi, originator.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and not createdByEntity(ce, phi)
+  and createdBy(originator, phi)
+  and originatorAvailable(originator)
+  implies
+  mayDenyAmendment(ce, individual, phi)
+;
+
+@["§164.526(a)(2)(ii) - Grounds for denial - not part of designated record set"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and not partOfDesignatedRecordSet(phi)
+  implies
+  mayDenyAmendment(ce, individual, phi)
+;
+
+@["§164.526(a)(2)(iii) - Grounds for denial - not available for inspection"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and not availableForInspection(phi)
+  implies
+  mayDenyAmendment(ce, individual, phi)
+;
+
+@["§164.526(a)(2)(iv) - Grounds for denial - accurate and complete"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and accurate(phi)
+  and complete(phi)
+  implies
+  mayDenyAmendment(ce, individual, phi)
+;
+
+@["§164.526(b)(1) - Timely action on amendment requests"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  implies
+  actOnAmendmentWithin60Days(ce, individual, phi)
+;
+
+@["§164.526(b)(3) - Denial of amendment"]
+forall ce, individual, phi.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and deniesAmendment(ce, individual, phi)
+  implies
+  (denialInWriting(ce, individual, phi)
+   and basisForDenial(ce, individual, phi)
+   and rightToSubmitStatement(individual, phi))
+;
+
+@["§164.526(c)(1) - Accepting amendment request"]
+forall ce, individual, phi, recipient.
+  coveredEntity(ce)
+  and requestsAmendment(individual, phi)
+  and acceptsAmendment(ce, individual, phi)
+  and identifiesRelevantPersons(individual, recipient)
+  implies
+  informRecipient(ce, recipient, phi)
+;
+
+@["§164.526(d) - Individual statement"]
+forall ce, individual, phi, statement.
+  coveredEntity(ce)
+  and deniesAmendment(ce, individual, phi)
+  and submitsStatement(individual, statement, phi)
+  implies
+  (linkStatement(ce, phi, statement)
+   and includeWithDisclosures(ce, phi, statement))
+;
+
+@["§164.528(a)(1) - Right to accounting"]
+forall ce, individual.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  implies
+  provideAccounting(ce, individual)
+;
+
+@["§164.528(a)(2)(i) - Accounting excludes TPO disclosures"]
+forall ce, individual, disclosure.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and (disclosureForTreatment(disclosure)
+       or disclosureForPayment(disclosure)
+       or disclosureForOperations(disclosure))
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(a)(2)(ii) - Accounting excludes disclosures to individual"]
+forall ce, individual, disclosure, phi.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and disclosureToIndividual(disclosure, individual, phi)
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(a)(2)(iii) - Accounting excludes authorized disclosures"]
+forall ce, individual, disclosure, phi.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and disclosureWithAuthorization(disclosure, phi)
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(a)(2)(iv) - Accounting excludes facility directory"]
+forall ce, individual, disclosure.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and disclosureForFacilityDirectory(disclosure)
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(a)(2)(v) - Accounting excludes family/friends"]
+forall ce, individual, disclosure.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and disclosureToFamilyFriends(disclosure)
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(a)(2)(vi) - Accounting excludes national security"]
+forall ce, individual, disclosure.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and disclosureForNationalSecurity(disclosure)
+  implies
+  not includeInAccounting(disclosure)
+;
+
+@["§164.528(b)(1) - Content of accounting"]
+forall ce, individual, disclosure.
+  coveredEntity(ce)
+  and provideAccounting(ce, individual)
+  and includeInAccounting(disclosure)
+  implies
+  (accountingIncludesDate(disclosure)
+   and accountingIncludesRecipient(disclosure)
+   and accountingIncludesDescription(disclosure)
+   and accountingIncludesPurpose(disclosure))
+;
+
+@["§164.528(b)(2) - Timely action on accounting requests"]
+forall ce, individual.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  implies
+  provideAccountingWithin60Days(ce, individual)
+;
+
+@["§164.528(c)(1) - Accounting period"]
+forall ce, individual, period.
+  coveredEntity(ce)
+  and requestsAccounting(individual)
+  and requestsPeriod(individual, period)
+  and withinSixYears(period)
+  implies
+  provideAccountingForPeriod(ce, individual, period)
+;
+
+@["§164.520(a)(1) - Notice requirement for direct treatment providers"]
+forall ce, individual.
+  coveredEntity(ce)
+  and directTreatmentProvider(ce)
+  and receivesServices(individual, ce)
+  implies
+  (provideNotice(ce, individual)
+   and makeGoodFaithEffort(ce, individual))
+;
+
+@["§164.520(b)(1) - Content of notice - header"]
+forall ce, notice.
+  coveredEntity(ce)
+  and privacyNotice(notice, ce)
+  implies
+  noticeIncludesHeader(notice)
+;
+
+@["§164.520(b)(1)(i) - Content - uses and disclosures"]
+forall ce, notice.
+  coveredEntity(ce)
+  and privacyNotice(notice, ce)
+  implies
+  (noticeDescribesTPO(notice)
+   and noticeDescribesOtherUses(notice))
+;
+
+@["§164.520(b)(1)(ii) - Content - individual rights"]
+forall ce, notice.
+  coveredEntity(ce)
+  and privacyNotice(notice, ce)
+  implies
+  (noticeDescribesAccessRight(notice)
+   and noticeDescribesAmendmentRight(notice)
+   and noticeDescribesAccountingRight(notice)
+   and noticeDescribesRestrictionRight(notice)
+   and noticeDescribesConfidentialCommRight(notice)
+   and noticeDescribesComplaintRight(notice))
+;
+
+@["§164.520(b)(1)(iii) - Content - CE duties"]
+forall ce, notice.
+  coveredEntity(ce)
+  and privacyNotice(notice, ce)
+  implies
+  (noticeDescribesMaintainPrivacy(notice)
+   and noticeDescribesNoticeOfBreach(notice)
+   and noticeDescribesChangesToNotice(notice))
+;
+
+@["§164.520(b)(1)(vi) - Content - contact information"]
+forall ce, notice.
+  coveredEntity(ce)
+  and privacyNotice(notice, ce)
+  implies
+  (noticeIncludesContactPerson(notice)
+   and noticeIncludesComplaintProcess(notice))
+;
+
+@["§164.520(c)(1) - Provision of notice"]
+forall ce, individual, visit.
+  coveredEntity(ce)
+  and directTreatmentProvider(ce)
+  and firstServiceDelivery(visit, individual, ce)
+  implies
+  provideNoticeAtFirstVisit(ce, individual)
+;
+
+@["§164.520(c)(2)(i) - Electronic notice"]
+forall ce, individual.
+  coveredEntity(ce)
+  and maintainsWebsite(ce)
+  implies
+  postNoticeOnWebsite(ce)
+;
+
+@["§164.520(c)(2)(ii) - Email notice"]
+forall ce, individual.
+  coveredEntity(ce)
+  and communicatesByEmail(ce, individual)
+  and agreesToElectronicNotice(individual)
+  implies
+  mayProvideElectronicNotice(ce, individual)
+;
+
+@["§164.520(c)(3) - Emergency treatment"]
+forall ce, individual, emergency.
+  coveredEntity(ce)
+  and emergencyTreatment(emergency, individual)
+  and unableToProvideNotice(ce, individual)
+  implies
+  provideNoticeAfterEmergency(ce, individual)
+;
+
+@["§164.520(d)(1) - Health plans - notice within 60 days"]
+forall hp, individual.
+  coveredEntity(hp)
+  and healthPlan(hp)
+  and enrolls(individual, hp)
+  implies
+  provideNoticeWithin60Days(hp, individual)
+;
+
+@["§164.520(e)(1) - Joint notice"]
+forall ce1, ce2, notice.
+  coveredEntity(ce1)
+  and coveredEntity(ce2)
+  and jointlyProvideServices(ce1, ce2)
+  and jointNotice(notice, ce1, ce2)
+  implies
+  mayUseJointNotice(ce1, ce2, notice)
+;
+
+@["§164.522(a)(1)(i) - Right to request restrictions"]
+forall ce, individual, phi, recipient.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsRestriction(individual, phi, recipient)
+  implies
+  (mayAgreeToRestriction(ce, individual, phi, recipient)
+   or mayDeclineRestriction(ce, individual, phi, recipient))
+;
+
+@["§164.522(a)(1)(ii) - Restriction once agreed"]
+forall ce, individual, phi, recipient.
+  coveredEntity(ce)
+  and agreesToRestriction(ce, individual, phi, recipient)
+  implies
+  boundByRestriction(ce, phi, recipient)
+;
+
+@["§164.522(a)(1)(iii) - Termination of restriction"]
+forall ce, individual, phi, restriction.
+  coveredEntity(ce)
+  and agreesToRestriction(ce, individual, phi, @Recipient)
+  and (requestsTermination(individual, restriction)
+       or notifiesTermination(ce, individual, restriction))
+  implies
+  restrictionTerminated(restriction)
+;
+
+@["§164.522(a)(1)(iv) - Emergency exception to restriction"]
+forall ce, phi, recipient, restriction, emergency.
+  coveredEntity(ce)
+  and boundByRestriction(ce, phi, recipient)
+  and emergencyTreatment(emergency, @Patient)
+  and neededForTreatment(phi, emergency)
+  implies
+  mayDiscloseDespiteRestriction(ce, phi, recipient)
+;
+
+@["§164.522(a)(1)(vi) - Required restriction for out-of-pocket payment"]
+forall ce, individual, phi, healthplan.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and requestsRestriction(individual, phi, healthplan)
+  and paidOutOfPocketInFull(individual, phi)
+  and not requiredByLaw(@Disclosure)
+  implies
+  mustComplyWithRestriction(ce, individual, phi)
+;
+
+@["§164.522(b)(1) - Confidential communications"]
+forall ce, individual.
+  coveredEntity(ce)
+  and healthPlan(ce)
+  and requestsConfidentialComm(individual)
+  implies
+  mustAccommodateReasonableRequest(ce, individual)
+;
+
+@["§164.522(b)(2) - Confidential communication - conditions"]
+forall ce, individual, request.
+  coveredEntity(ce)
+  and directTreatmentProvider(ce)
+  and requestsConfidentialComm(individual)
+  and requestIsReasonable(request)
+  implies
+  mustAccommodate(ce, individual, request)
+;
+
+@["§164.514(f)(1) - Decedents"]
+forall ce, phi, recipient, decedent.
+  coveredEntity(ce)
+  and hasRecord(decedent, phi)
+  and deceased(decedent)
+  and (personalRepresentative(recipient, decedent)
+       or familyMember(recipient, decedent)
+       or otherPersonInvolved(recipient, decedent))
+  implies
+  mayDiscloseToPersons(ce, recipient, phi)
+;
+
+@["§164.514(g)(1) - Personal representatives"]
+forall ce, individual, phi, representative.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and personalRepresentative(representative, individual)
+  and not suspectAbuse(ce, representative, individual)
+  implies
+  treatAsIndividual(ce, representative, individual)
+;
+
+@["§164.514(g)(3) - Unemancipated minors"]
+forall ce, minor, phi, parent.
+  coveredEntity(ce)
+  and hasRecord(minor, phi)
+  and unemancipatedMinor(minor)
+  and parentOf(parent, minor)
+  and not minorConsentsUnderLaw(minor)
+  implies
+  personalRepresentative(parent, minor)
+;
+
+@["§164.514(h)(1) - Confidential communications for abuse victims"]
+forall ce, individual, representative.
+  coveredEntity(ce)
+  and personalRepresentative(representative, individual)
+  and (suspectAbuse(ce, representative, individual)
+       or endangersIndividual(representative, individual))
+  implies
+  not treatAsIndividual(ce, representative, individual)
+;
+
+@["§164.508(a)(3)(i) - Marketing requires authorization"]
+forall ce, individual, phi, marketing.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and marketingCommunication(marketing)
+  and usesOrDiscloses(ce, phi, marketing)
+  and not (faceToFaceCommunication(marketing)
+           or promotionalGiftOfNominalValue(marketing)
+           or treatmentCommunication(marketing)
+           or caseManagementCommunication(marketing))
+  implies
+  requiresAuthorization(ce, individual, phi, marketing)
+;
+
+@["§164.508(a)(3)(ii) - Financial remuneration in marketing"]
+forall ce, individual, phi, marketing.
+  coveredEntity(ce)
+  and marketingCommunication(marketing)
+  and financialRemuneration(ce, marketing)
+  and requiresAuthorization(ce, individual, phi, marketing)
+  implies
+  authorizationStatesRemuneration(ce, individual, phi)
+;
+
+@["§164.508(a)(4) - Sale of PHI requires authorization"]
+forall ce, individual, phi, sale.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and saleOfPHI(sale, phi)
+  and not (publicHealthPurpose(sale)
+           or researchPurpose(sale)
+           or treatmentAndPayment(sale)
+           or businessAssociateSale(sale)
+           or individualRequest(sale)
+           or requiredByLaw(sale))
+  implies
+  (requiresAuthorization(ce, individual, phi, sale)
+   and authorizationStatesSale(ce, individual, phi))
+;
+
+@["§164.514(f)(1) - Fundraising"]
+forall ce, individual, phi, fundraising.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and fundraisingCommunication(fundraising)
+  and usesDemographicInfo(fundraising, phi)
+  implies
+  (providesOptOut(ce, individual)
+   and noticesOptOutMethod(ce, individual))
+;
+
+@["§164.514(f)(2) - Fundraising opt-out"]
+forall ce, individual, fundraising.
+  coveredEntity(ce)
+  and fundraisingCommunication(fundraising)
+  and optsOut(individual, fundraising)
+  implies
+  mustHonorOptOut(ce, individual)
+;
+
+@["§164.512(i)(1)(ii) - Reviews preparatory to research"]
+forall ce, researcher, phi.
+  coveredEntity(ce)
+  and protectedHealthInfo(phi)
+  and reviewPreparatoryToResearch(researcher)
+  and representsNoRemovalOfPHI(researcher)
+  and representsNecessary(researcher)
+  implies
+  mayDiscloseForReview(ce, researcher, phi)
+;
+
+@["§164.512(i)(1)(iii) - Research on decedents' information"]
+forall ce, researcher, phi, decedent.
+  coveredEntity(ce)
+  and hasRecord(decedent, phi)
+  and deceased(decedent)
+  and researchOnDecedents(researcher)
+  and documentationOfDeath(researcher, decedent)
+  implies
+  mayDiscloseForResearch(ce, researcher, phi)
+;
+
+@["§164.512(i)(2) - Recruitment for research"]
+forall ce, researcher, phi, individual.
+  coveredEntity(ce)
+  and hasRecord(individual, phi)
+  and recruitmentForResearch(researcher)
+  and obtainsAuthorization(researcher, individual)
+  implies
+  mayContactForRecruitment(ce, researcher, individual)
+;
+
+@["§164.508(b)(3)(i) - Compound authorization prohibited"]
+forall ce, individual, auth.
+  coveredEntity(ce)
+  and authorization(auth, individual)
+  and combinesResearchAndTreatment(auth)
+  implies
+  not validAuthorization(auth)
+;
+
+@["§164.508(b)(3)(ii) - Compound authorization exception - conditioning"]
+forall ce, individual, auth, research.
+  coveredEntity(ce)
+  and authorization(auth, individual)
+  and combinesResearchAndTreatment(auth)
+  and researchConditioned(research)
+  implies
+  validAuthorization(auth)
+;
+policy ends

@@ -1,0 +1,643 @@
+PREDICATES
+
+# Core boolean
+True : Bool
+False : Bool
+
+# Identity & Roles
+inrole : Entity String -> Bool
+coveredEntity : Entity -> Bool
+businessAssociate : Entity -> Bool
+publicHealthAuthority : Entity -> Bool
+healthOversightAgency : Entity -> Bool
+lawEnforcementOfficial : Entity -> Bool
+workforceOf : Entity Entity -> Bool
+
+# PHI Properties
+protectedHealthInfo : PHI -> Bool
+isPsychotherapyNotes : PHI -> Bool
+phiSensitivity : PHI String -> Bool
+hasRecord : Entity PHI -> Bool
+deidentified : PHI -> Bool
+limitedDataSet : PHI -> Bool
+removedAllIdentifiers : PHI -> Bool
+noActualKnowledge : PHI -> Bool
+inaccurate : PHI -> Bool
+incomplete : PHI -> Bool
+compiledForLegalProceeding : PHI -> Bool
+prohibitedByLaw : PHI -> Bool
+
+# Disclosure & Use
+disclose : Entity Entity PHI Purpose -> Bool
+useOrDisclose : Entity Entity PHI Purpose -> Bool
+permittedUseOrDisclosure : Entity Entity PHI Purpose -> Bool
+permittedDisclosureTPO : Entity Entity PHI Purpose -> Bool
+minimumNecessary : Entity Entity PHI Purpose -> Bool
+isDisclosureToPatient : Entity PHI -> Bool
+unauthorizedDisclosure : PHI -> Bool
+
+# Purpose
+purposeOfDisclosure : PHI Purpose -> Bool
+purposeIsPurpose : Purpose Purpose -> Bool
+
+# Authorization
+hasAuthorization : Entity Entity PHI -> Bool
+hasAuthorizationPsychNotes : Entity Entity PHI -> Bool
+hasConsent : Entity Entity PHI -> Bool
+requestsRestriction : Entity PHI -> Bool
+paidOutOfPocket : Entity PHI -> Bool
+mustComplyWithRestriction : Entity Entity PHI -> Bool
+waiverOfAuthorization : Entity -> Bool
+
+# Legal requirements
+requiredByLaw : Purpose -> Bool
+authorizedByLaw : Entity Purpose -> Bool
+hasCourtOrder : Entity PHI -> Bool
+hasWarrant : Entity PHI -> Bool
+hasSubpoena : Entity PHI -> Bool
+hasAdminRequest : Entity PHI -> Bool
+satisfactoryAssurances : Entity PHI -> Bool
+relevantAndMaterialInfo : PHI -> Bool
+
+# Family & Care
+familyMember : Entity Entity -> Bool
+involvedInCare : Entity Entity -> Bool
+objectsToDisclosure : Entity Entity -> Bool
+incapacitated : Entity -> Bool
+inBestInterest : Entity Entity -> Bool
+agreesToReport : Entity -> Bool
+informedOfReport : Entity -> Bool
+
+# Victim status
+victimOfAbuse : Entity -> Bool
+victimOfNeglect : Entity -> Bool
+victimOfDomesticViolence : Entity -> Bool
+
+# Threats & Safety
+seriousThreat : Entity -> Bool
+goodFaithBelief : Entity Entity -> Bool
+ableToPreventThreat : Entity -> Bool
+isLawEnforcement : Entity -> Bool
+crimeOnPremises : Entity -> Bool
+necessaryToAlertLE : PHI -> Bool
+identifySuspect : Purpose -> Bool
+
+# Research
+irbApproval : Entity Entity Purpose -> Bool
+representationOfNeed : Entity -> Bool
+hasDataUseAgreement : Entity Entity PHI -> Bool
+deceased : Entity -> Bool
+
+# Patient Rights
+receivesServices : Entity Entity -> Bool
+requestsAccess : Entity PHI -> Bool
+requestsAmendment : Entity PHI -> Bool
+requestsAccounting : Entity -> Bool
+mustProvideNotice : Entity Entity -> Bool
+mustProvideAccess : Entity Entity PHI -> Bool
+mustAmendOrProvideReason : Entity Entity PHI -> Bool
+mustProvideAccounting : Entity Entity PHI -> Bool
+withinSixYears : Entity -> Bool
+toIndividual : Entity -> Bool
+createdBy : Entity PHI -> Bool
+
+# Compliance & Enforcement
+violatesPolicy : Entity -> Bool
+mustApplySanctions : Entity Entity -> Bool
+mustMitigateHarm : Entity PHI -> Bool
+
+# Security Management (§164.308(a)(1))
+hasSecurityManagementProcess : Entity -> Bool
+conductsRiskAnalysis : Entity -> Bool
+hasRiskManagementPlan : Entity -> Bool
+hasSanctionPolicy : Entity -> Bool
+hasReviewProcess : Entity -> Bool
+hasRiskAnalysis : Entity System -> Bool
+identifiedRisk : Risk System -> Bool
+hasMitigationPlan : Entity Risk -> Bool
+acceptedRisk : Entity Risk -> Bool
+transferredRisk : Entity Risk -> Bool
+
+# Security Official (§164.308(a)(2))
+hasSecurityOfficial : Entity -> Bool
+
+# Workforce Security (§164.308(a)(3))
+hasAuthorizationProcedures : Entity Entity -> Bool
+hasWorkforceClearance : Entity Entity -> Bool
+hasTerminationProcedures : Entity Entity -> Bool
+authorizedToAccess : Entity Entity System -> Bool
+hasClearanceLevel : Entity -> Bool
+formerWorkforce : Entity Entity -> Bool
+accessRevoked : Entity -> Bool
+keysReturned : Entity -> Bool
+accountsDisabled : Entity -> Bool
+
+# Information Access Management (§164.308(a)(4))
+hasAccessPolicy : Entity Entity -> Bool
+requestsAccess : Entity System -> Bool
+accessGranted : Entity System -> Bool
+authorizedByRole : Entity System -> Bool
+hasAccessLevel : Entity System String -> Bool
+reviewedAccess : Entity Entity System -> Bool
+documentedAccess : Entity Entity System -> Bool
+
+# Security Training (§164.308(a)(5))
+receivedSecurityTraining : Entity -> Bool
+trainingDocumented : Entity -> Bool
+receivesSecurityReminders : Entity -> Bool
+hasMalwareProtection : System -> Bool
+malwareProtectionUpdated : System -> Bool
+monitorsLoginAttempts : System -> Bool
+hasPasswordPolicy : Entity -> Bool
+passwordMeetsComplexity : Entity System -> Bool
+passwordChangedRegularly : Entity System -> Bool
+
+# Security Incidents (§164.308(a)(6))
+hasIncidentResponsePlan : Entity -> Bool
+securityIncident : Incident Entity -> Bool
+incidentIdentified : Incident -> Bool
+incidentDocumented : Incident -> Bool
+incidentMitigated : Incident -> Bool
+incidentReported : Incident -> Bool
+
+# Contingency Planning (§164.308(a)(7))
+hasDataBackupPlan : Entity -> Bool
+hasDisasterRecoveryPlan : Entity -> Bool
+hasEmergencyModeOperation : Entity -> Bool
+hasTestingProcedures : Entity -> Bool
+hasApplicationsCriticality : Entity -> Bool
+hasContingencyPlan : Entity -> Bool
+hasBackup : PHI -> Bool
+backupTested : PHI -> Bool
+backupRecoverable : PHI -> Bool
+disasterOccurs : String Entity -> Bool
+canRestoreEPHI : Entity -> Bool
+contingencyPlanTested : Entity -> Bool
+testingDocumented : Entity -> Bool
+
+# Evaluation (§164.308(a)(8))
+conductsPeriodicEvaluation : Entity -> Bool
+evaluationDocumented : Entity -> Bool
+
+# Business Associate Agreements (§164.308(b))
+hasBAA : Entity Entity -> Bool
+baaRequiresSafeguards : Entity Entity -> Bool
+baaRequiresReporting : Entity Entity -> Bool
+baaAllowsTermination : Entity Entity -> Bool
+disclosesEPHI : Entity Entity PHI -> Bool
+
+# Systems & ePHI
+ephi_system : System -> Bool
+operatesSystem : Entity System -> Bool
+storesEPHI : System PHI -> Bool
+accessesSystem : Entity System -> Bool
+accessesEPHI : Entity -> Bool
+accessesEPHI_workstation : System -> Bool
+electronicPHI : PHI -> Bool
+
+# Physical Safeguards (§164.310)
+operatesFacility : Entity String -> Bool
+housingEPHI : String -> Bool
+hasAccessControls : String -> Bool
+limitsPhysicalAccess : String -> Bool
+validatesAccess : String -> Bool
+emergencyOccurs : String String -> Bool
+allowsEmergencyAccess : String -> Bool
+hasFacilitySecurityPlan : String -> Bool
+entersArea : Entity String -> Bool
+validatedIdentity : Entity -> Bool
+authorizedForArea : Entity String -> Bool
+maintenancePerformed : String String -> Bool
+maintenanceDocumented : String -> Bool
+
+# Workstation (§164.310(b)(c))
+usesWorkstation : Entity System -> Bool
+hasWorkstationPolicy : Entity -> Bool
+workstationProperlyLocated : System -> Bool
+workstationSecured : System -> Bool
+ownsWorkstation : Entity System -> Bool
+physicalSafeguardsImplemented : System -> Bool
+unauthorizedAccessPrevented : System -> Bool
+
+# Device and Media Controls (§164.310(d))
+containsEPHI : String PHI -> Bool
+hasDisposalProcedures : Entity String -> Bool
+hasMediaReuseProcedures : Entity String -> Bool
+hasAccountabilityProcedures : Entity String -> Bool
+hasDataBackupProcedures : Entity String -> Bool
+disposingOf : Entity String -> Bool
+dataUnrecoverable : String -> Bool
+physicallyDestroyed : String -> Bool
+reusingMedia : Entity String -> Bool
+phiRemovedBeforeReuse : String -> Bool
+mediaInventoryMaintained : Entity String -> Bool
+mediaMovementsTracked : String -> Bool
+backupMedia : String PHI -> Bool
+backupStoredSecurely : String -> Bool
+backupRetrievable : String -> Bool
+
+# Technical Safeguards - Access Control (§164.312(a))
+hasUniqueUserID : System -> Bool
+hasEmergencyAccess : System -> Bool
+hasAutomaticLogoff : System -> Bool
+hasEncryptionDecryption : System -> Bool
+hasUniqueIdentifier : Entity System -> Bool
+needsAccess : String System -> Bool
+emergencyAccessAvailable : System -> Bool
+activeSession : String System -> Bool
+sessionInactive : String -> Bool
+sessionTerminated : String -> Bool
+encryptionAddressable : System -> Bool
+encrypted : PHI -> Bool
+documentedReason : Entity PHI -> Bool
+
+# Audit Controls (§164.312(b))
+systemActivity : String System -> Bool
+activityLogged : String -> Bool
+logReviewable : String -> Bool
+logProtected : String -> Bool
+
+# Integrity (§164.312(c))
+hasIntegrityControls : System -> Bool
+unauthorizedAlterationPrevented : PHI -> Bool
+hasAuthenticationMechanism : PHI -> Bool
+documentedNoMechanism : Entity PHI -> Bool
+
+# Authentication (§164.312(d))
+attemptsAccess : Entity System -> Bool
+identityVerified : Entity System -> Bool
+authenticationSuccessful : Entity System -> Bool
+
+# Transmission Security (§164.312(e))
+transmitsEPHI : String PHI -> Bool
+hasIntegrityControls : String -> Bool
+hasEncryption : String -> Bool
+unauthorizedModificationDetected : String -> Bool
+integrityVerified : String -> Bool
+transmissionOverInternet : String -> Bool
+transmissionEncrypted : String -> Bool
+documentedReasonNoEncryption : Entity String -> Bool
+
+# Privacy Administrative (§164.530)
+hasPrivacyOfficial : Entity -> Bool
+hasContactPerson : Entity -> Bool
+receivedPrivacyTraining : Entity -> Bool
+administrativeSafeguards : Entity PHI -> Bool
+physicalSafeguards : Entity PHI -> Bool
+technicalSafeguards : Entity PHI -> Bool
+hasComplaintProcess : Entity -> Bool
+complaintsDocumented : Entity -> Bool
+privacyViolation : Entity String -> Bool
+sanctionsApplied : Entity Entity -> Bool
+unauthorizedUse : PHI -> Bool
+harmfulEffect : String PHI -> Bool
+mitigationAttempted : Entity String -> Bool
+exercisesRights : Entity -> Bool
+intimidated : Entity Entity -> Bool
+requestsWaiver : Entity Entity String -> Bool
+waiverAsCondition : Entity String -> Bool
+hasPrivacyPolicies : Entity -> Bool
+policiesImplemented : Entity -> Bool
+policiesMaintained : Entity -> Bool
+privacyAction : String Entity -> Bool
+actionDocumented : String -> Bool
+documentRetained : String Int -> Bool
+privacyDocument : String Entity -> Bool
+documentRetainedYears : String Int -> Bool
+
+# Breach Notification (§164.400-414)
+unauthorizedAcquisition : String PHI -> Bool
+goodFaithAccess : String -> Bool
+inadvertentDisclosure : String -> Bool
+unableToRetain : String -> Bool
+isBreach : String -> Bool
+affectsIndividual : String Entity PHI -> Bool
+notifyIndividual : Entity Entity String -> Bool
+notificationWithin60Days : Entity Entity String -> Bool
+notificationIncludesDescription : String -> Bool
+notificationIncludesTypesOfPHI : String -> Bool
+notificationIncludesSteps : String -> Bool
+notificationIncludesMitigation : String -> Bool
+notificationIncludesContactInfo : String -> Bool
+affects500OrMore : String -> Bool
+affectsFewerThan500 : String -> Bool
+notifyMedia : Entity String -> Bool
+notifySecretary : Entity String -> Bool
+notifyWithin60Days : Entity String -> Bool
+notifyAnnually : Entity String -> Bool
+breachAtBA : String Entity -> Bool
+notifyCE : Entity Entity String -> Bool
+riskAssessmentConducted : String -> Bool
+breachDocumented : String -> Bool
+documentationRetained : String Int -> Bool
+
+# Access Rights (§164.524)
+requestsAccess : Entity PHI -> Bool
+mustProvideAccess : Entity Entity PHI -> Bool
+mayDenyAccess : Entity Entity PHI -> Bool
+unreviewableDenial : Entity Entity PHI -> Bool
+reviewableDenial : Entity Entity PHI -> Bool
+deniesAccess : Entity Entity PHI -> Bool
+denialInWriting : Entity Entity PHI -> Bool
+informationCompiledForLegalProceeding : PHI -> Bool
+prisonersException : Entity -> Bool
+cliaCertifiedLab : Entity PHI -> Bool
+permitsCLIAAccess : PHI -> Bool
+researchStudyInProgress : PHI -> Bool
+actWithin30Days : Entity Entity PHI -> Bool
+needsExtension : Entity -> Bool
+notifyExtension : Entity Entity -> Bool
+actWithin60Days : Entity Entity PHI -> Bool
+rightToReview : Entity PHI -> Bool
+reviewByLicensedHealthcareProfessional : Entity PHI -> Bool
+
+# Access Format
+requestsFormat : Entity String -> Bool
+formatReadilyProducible : Entity String -> Bool
+provideInRequestedFormat : Entity Entity PHI String -> Bool
+maintainedInEHR : PHI -> Bool
+requestsElectronicCopy : Entity -> Bool
+provideElectronicCopy : Entity Entity PHI -> Bool
+directsToThirdParty : Entity Entity PHI -> Bool
+transmitToThirdParty : Entity Entity PHI -> Bool
+
+# Access Fees
+chargesFee : Entity Int -> Bool
+feeCoversLaborOnly : Int -> Bool
+feeCoversSupplies : Int -> Bool
+feeCoversPostage : Int -> Bool
+feeReasonable : Int -> Bool
+
+# Summary Access
+agreesToSummary : Entity String -> Bool
+agreesToSummaryFee : Entity -> Bool
+mayProvideSummary : Entity Entity String -> Bool
+
+# Amendment Rights (§164.526)
+requestsAmendment : Entity PHI -> Bool
+mustAmend : Entity Entity PHI -> Bool
+provideDenialReason : Entity Entity PHI -> Bool
+mayDenyAmendment : Entity Entity PHI -> Bool
+createdByEntity : Entity PHI -> Bool
+originatorAvailable : Entity -> Bool
+partOfDesignatedRecordSet : PHI -> Bool
+availableForInspection : PHI -> Bool
+accurate : PHI -> Bool
+complete : PHI -> Bool
+actOnAmendmentWithin60Days : Entity Entity PHI -> Bool
+deniesAmendment : Entity Entity PHI -> Bool
+basisForDenial : Entity Entity PHI -> Bool
+rightToSubmitStatement : Entity PHI -> Bool
+acceptsAmendment : Entity Entity PHI -> Bool
+identifiesRelevantPersons : Entity Entity -> Bool
+informRecipient : Entity Entity PHI -> Bool
+submitsStatement : Entity String PHI -> Bool
+linkStatement : Entity PHI String -> Bool
+includeWithDisclosures : Entity PHI String -> Bool
+
+# Accounting of Disclosures (§164.528)
+requestsAccounting : Entity -> Bool
+provideAccounting : Entity Entity -> Bool
+disclosureForTreatment : String -> Bool
+disclosureForPayment : String -> Bool
+disclosureForOperations : String -> Bool
+includeInAccounting : String -> Bool
+disclosureToIndividual : String Entity PHI -> Bool
+disclosureWithAuthorization : String PHI -> Bool
+disclosureForFacilityDirectory : String -> Bool
+disclosureToFamilyFriends : String -> Bool
+disclosureForNationalSecurity : String -> Bool
+accountingIncludesDate : String -> Bool
+accountingIncludesRecipient : String -> Bool
+accountingIncludesDescription : String -> Bool
+accountingIncludesPurpose : String -> Bool
+provideAccountingWithin60Days : Entity Entity -> Bool
+requestsPeriod : Entity String -> Bool
+withinSixYears : String -> Bool
+provideAccountingForPeriod : Entity Entity String -> Bool
+
+# Notice of Privacy Practices (§164.520)
+provideNotice : Entity Entity -> Bool
+makeGoodFaithEffort : Entity Entity -> Bool
+privacyNotice : String Entity -> Bool
+noticeIncludesHeader : String -> Bool
+noticeDescribesTPO : String -> Bool
+noticeDescribesOtherUses : String -> Bool
+noticeDescribesAccessRight : String -> Bool
+noticeDescribesAmendmentRight : String -> Bool
+noticeDescribesAccountingRight : String -> Bool
+noticeDescribesRestrictionRight : String -> Bool
+noticeDescribesConfidentialCommRight : String -> Bool
+noticeDescribesComplaintRight : String -> Bool
+noticeDescribesMaintainPrivacy : String -> Bool
+noticeDescribesNoticeOfBreach : String -> Bool
+noticeDescribesChangesToNotice : String -> Bool
+noticeIncludesContactPerson : String -> Bool
+noticeIncludesComplaintProcess : String -> Bool
+directTreatmentProvider : Entity -> Bool
+firstServiceDelivery : String Entity Entity -> Bool
+provideNoticeAtFirstVisit : Entity Entity -> Bool
+maintainsWebsite : Entity -> Bool
+postNoticeOnWebsite : Entity -> Bool
+communicatesByEmail : Entity Entity -> Bool
+agreesToElectronicNotice : Entity -> Bool
+mayProvideElectronicNotice : Entity Entity -> Bool
+emergencyTreatment : String Entity -> Bool
+unableToProvideNotice : Entity Entity -> Bool
+provideNoticeAfterEmergency : Entity Entity -> Bool
+healthPlan : Entity -> Bool
+enrolls : Entity Entity -> Bool
+provideNoticeWithin60Days : Entity Entity -> Bool
+jointlyProvideServices : Entity Entity -> Bool
+jointNotice : String Entity Entity -> Bool
+mayUseJointNotice : Entity Entity String -> Bool
+
+# Restrictions (§164.522)
+requestsRestriction : Entity PHI Entity -> Bool
+mayAgreeToRestriction : Entity Entity PHI Entity -> Bool
+mayDeclineRestriction : Entity Entity PHI Entity -> Bool
+agreesToRestriction : Entity Entity PHI Entity -> Bool
+boundByRestriction : Entity PHI Entity -> Bool
+requestsTermination : Entity String -> Bool
+notifiesTermination : Entity Entity String -> Bool
+restrictionTerminated : String -> Bool
+neededForTreatment : PHI String -> Bool
+mayDiscloseDespiteRestriction : Entity PHI Entity -> Bool
+paidOutOfPocketInFull : Entity PHI -> Bool
+requestsConfidentialComm : Entity -> Bool
+mustAccommodateReasonableRequest : Entity Entity -> Bool
+requestIsReasonable : String -> Bool
+mustAccommodate : Entity Entity String -> Bool
+
+# Decedents and Representatives (§164.514)
+personalRepresentative : Entity Entity -> Bool
+otherPersonInvolved : Entity Entity -> Bool
+mayDiscloseToPersons : Entity Entity PHI -> Bool
+suspectAbuse : Entity Entity Entity -> Bool
+treatAsIndividual : Entity Entity Entity -> Bool
+unemancipatedMinor : Entity -> Bool
+parentOf : Entity Entity -> Bool
+minorConsentsUnderLaw : Entity -> Bool
+endangersIndividual : Entity Entity -> Bool
+
+# Marketing and Fundraising (§164.508, §164.514(f))
+marketingCommunication : String -> Bool
+usesOrDiscloses : Entity PHI String -> Bool
+faceToFaceCommunication : String -> Bool
+promotionalGiftOfNominalValue : String -> Bool
+treatmentCommunication : String -> Bool
+caseManagementCommunication : String -> Bool
+requiresAuthorization : Entity Entity PHI String -> Bool
+financialRemuneration : Entity String -> Bool
+authorizationStatesRemuneration : Entity Entity PHI -> Bool
+saleOfPHI : String PHI -> Bool
+publicHealthPurpose : String -> Bool
+researchPurpose : String -> Bool
+treatmentAndPayment : String -> Bool
+businessAssociateSale : String -> Bool
+individualRequest : String -> Bool
+requiredByLaw : String -> Bool
+authorizationStatesSale : Entity Entity PHI -> Bool
+fundraisingCommunication : String -> Bool
+usesDemographicInfo : String PHI -> Bool
+providesOptOut : Entity Entity -> Bool
+noticesOptOutMethod : Entity Entity -> Bool
+optsOut : Entity String -> Bool
+mustHonorOptOut : Entity Entity -> Bool
+
+# Research (§164.512(i), §164.508(b)(3))
+reviewPreparatoryToResearch : Entity -> Bool
+representsNoRemovalOfPHI : Entity -> Bool
+representsNecessary : Entity -> Bool
+mayDiscloseForReview : Entity Entity PHI -> Bool
+researchOnDecedents : Entity -> Bool
+documentationOfDeath : Entity Entity -> Bool
+mayDiscloseForResearch : Entity Entity PHI -> Bool
+recruitmentForResearch : Entity -> Bool
+obtainsAuthorization : Entity Entity -> Bool
+mayContactForRecruitment : Entity Entity Entity -> Bool
+authorization : String Entity -> Bool
+combinesResearchAndTreatment : String -> Bool
+validAuthorization : String -> Bool
+researchConditioned : String -> Bool
+
+
+CONSTANTS
+# Purpose constants
+@Recipient : Entity
+@Patient : Entity
+@Disclosure : Purpose
+@Treatment : Purpose
+@Payment : Purpose
+@PaymentToProvider : Purpose
+@HealthcareOperations : Purpose
+@PublicHealth : Purpose
+@Research : Purpose
+@JudicialProceeding : Purpose
+@LawEnforcement : Purpose
+@HealthOversight : Purpose
+@AbuseReporting : Purpose
+@SeriousThreat : Purpose
+@Emergency : Purpose
+@InformalCaregiving : Purpose
+@OriginatorTreatment : Purpose
+@TrainingProgram : Purpose
+@DefendLegalAction : Purpose
+@CrimeOnPremises : Purpose
+@Disclosure : Purpose
+@InformalCare : Purpose
+@HealthcareOperations : Purpose
+
+# PHI constants
+@AnyPHI : PHI
+@phi_medrec_001 : PHI
+@phi_psych_aaa : PHI
+@phi_sud_zzz : PHI
+@phi_lab_023 : PHI
+@phi_research_xyz : PHI
+@phi_deident_abc : PHI
+@phi_limited_data_def : PHI
+
+@AnyPHI : PHI
+@risk_unauthorized_access : Risk
+@risk_malware : Risk
+@risk_data_loss : Risk
+@risk_insider_threat : Risk
+@incident_001 : Incident
+@incident_ransomware : Incident
+@incident_phishing : Incident
+@system_ehr : System
+@system_billing : System
+@system_lab : System
+@workstation_001 : System
+@workstation_dr_office : System
+
+
+FUNCTIONS
+age : Entity -> Int
+phiSensitivityScore : PHI -> Int
+authExpiration : Auth -> String 
+duaExpiration :  Auth -> String 
+courtOrderDate : Auth -> String 
+disclosureDate :  Auth -> String 
+accessRequestDate : Auth -> String 
+amendmentRequestDate : Auth -> String 
+breachDiscoveryDate : Entity  -> String 
+recordsAffectedCount :  Entity -> Int
+daysSinceRequest :  Entity -> Int
+irbApprovalDate : Entity  -> String 
+yearsSinceDecease :  Entity -> Int
+minNecessaryPercent :  Entity -> Int
+notificationMethod : Entity -> String
+restrictionScope :  Entity -> Int
+riskSeverity : Risk -> Int 
+riskLikelihood : Risk -> Int 
+incidentSeverity : Incident -> Int 
+incidentDate :  Entity  -> String 
+breachAffectedCount : String -> Int
+breachDiscoveryDate : Entity  -> String 
+breachNotificationDate  : Entity  -> String 
+trainingDate : Entity  -> String 
+lastPasswordChange : Entity, System -> String 
+passwordComplexityScore : Entity, System -> Int
+sessionTimeoutMinutes : System -> Int
+encryptionStrength : System -> String
+backupFrequency : PHI -> String
+lastBackupDate : Entity  -> String 
+lastRiskAnalysisDate : Entity  -> String  
+lastSecurityEvaluation : Entity  -> String  
+contingencyPlanTestDate : Entity  -> String  
+auditLogRetentionDays : System -> Int
+failedLoginAttempts : Entity, System -> Int
+mediaDisposalDate : Entity  -> String  
+mediaDisposalDate : Entity  -> String  
+retentionYearsRequired : String -> Int
+baaSignatureDate : Entity, Entity  -> String  
+daysSinceBreachDiscovery : String -> Int
+clearanceLevel : Entity -> String
+accessResponseDays : Entity, Entity  -> Int  
+amendmentResponseDays : Entity  -> Int  
+accountingResponseDays : Entity  -> Int 
+accessFeeCents : Entity, Entity  -> Int  
+accountingPeriodYears : String -> Int
+disclosureCount : Entity -> Int
+restrictionComplianceRate : Entity -> Int
+noticeVersionDate : String -> String
+firstVisitDate : Entity, Entity  -> String  
+enrollmentDate : Entity, Entity  -> String  
+marketingRemunerationAmount : String -> Int
+saleAmount : String -> Int
+fundraisingOptOutCount : Entity -> Int
+amendmentRequestsPerYear : Entity -> Int
+accessRequestsPerYear : Entity -> Int 
+accountingRequestsPerYear : Entity -> Int 
+restrictionRequestsPerYear : Entity -> Int
+daysSinceAmendmentRequest : Entity -> Int
+daysSinceAccountingRequest : Entity -> Int
+minorAge : Entity -> Int
+deathDate : Entity -> String
+restrictionActiveSince : Entity -> String
+complaintDate : Entity -> String
+complaintResolutionDays : Entity -> Int 
+summaryPageCount : String -> Int
+fullRecordPageCount : Entity -> Int 

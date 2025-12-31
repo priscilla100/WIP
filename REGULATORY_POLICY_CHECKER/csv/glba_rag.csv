@@ -1,0 +1,2 @@
+"policy_id","regulation","section","title","description","fotl_formula","keywords","conditions","action","parent_id","created_at"
+"GLBA-Section501b-e1489c","GLBA","Section 501(b)","Safeguards Rule","Financial institutions must protect customer information...","forall fi, customer, info. (financialInstitution(fi) and customerInfo(info)) implies implementSafeguards(fi, info)","financial,institutions,protect,customer,information,safeguards,rule","financialInstitution,customerInfo","implementSafeguards","","2025-12-07T08:17:04.464678"

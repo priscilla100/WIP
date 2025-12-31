@@ -1,0 +1,14 @@
+regulation SOX version "1.0"
+
+policy starts
+
+@["Section 103 - Audit Committee Establishment"]
+forall c, b, i, p, r. (committee(c) and board(b) and publicCompany(i) and establishedBy(c, b) and boardOf(b, i) and purposeIsPurpose(c, @Compliance) and financialReport(r)) implies (oversees(c, r) and hasInternalControls(i, r)) ;
+
+@["Section 103 - Audit Committee Default"]
+forall issuer, board. (publicCompany(issuer) and officer(board) and not exists committee. (officer(committee) and hasInternalControls(issuer, committee))) implies hasInternalControls(issuer, board) ;
+
+@["Section 103 - Audit Report Preparation"]
+forall issuer, audit, report. (publicCompany(issuer) and financialReport(report) and auditPerformed(audit, issuer) and purposeIsPurpose(audit, @Compliance)) implies certifiesReport(issuer, report) ;
+
+policy ends

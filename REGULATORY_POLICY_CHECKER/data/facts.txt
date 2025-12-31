@@ -1,0 +1,1234 @@
+
+("coveredEntity", "HospitalA");
+("coveredEntity", "HospitalB");
+("coveredEntity", "ClinicA");
+
+(* PHI *)
+("protectedHealthInfo", "PHI_001");
+("protectedHealthInfo", "MedicalRecord");
+("protectedHealthInfo", "XRayScan");
+("protectedHealthInfo", "LabResult");
+
+(* Relationships *)
+("familyMember", "GrandmaFrank"; "PatientAlice");
+("familyMember", "MotherGrace"; "PatientBob");
+("hasRecord", "PatientAlice"; "MedicalRecord");
+("hasRecord", "PatientAlice"; "XRayScan");
+("hasRecord", "PatientBob"; "LabResult");
+
+(* Care involvement *)
+("involvedInCare", "GrandmaFrank"; "PatientAlice");
+("involvedInCare", "MotherGrace"; "PatientBob");
+
+(* Workforce *)
+("workforceOf", "DoctorDan"; "HospitalA");
+("workforceOf", "NurseEve"; "HospitalA");
+
+(* Business associates *)
+("hasBusinessAssociateAgreement", "HospitalA"; "ResearchInstitute");
+
+(* Authorizations (for testing) *)
+("hasAuthorization", "HospitalA"; "ResearcherCarol"; "PHI_001");
+
+
+# Patient roles
+inrole(@PatientAlice, "patient")
+inrole(@PatientBob, "patient")
+inrole(@PatientCarol, "patient")
+inrole(@PatientDave, "patient")
+inrole(@PatientEve, "patient")
+inrole(@PatientFrank, "patient")
+inrole(@PatientGrace, "patient")
+inrole(@PatientHank, "patient")
+inrole(@Grandma, "patient")
+inrole(@ChildMinor, "patient")
+
+# Healthcare provider roles
+inrole(@Dr_Smith, "physician")
+inrole(@Dr_Johnson, "physician")
+inrole(@Dr_Williams, "physician")
+inrole(@Therapist_Jones, "therapist")
+inrole(@Therapist_Brown, "therapist")
+inrole(@Nurse_Karen, "nurse")
+inrole(@Nurse_Mike, "nurse")
+inrole(@Psychologist_Chen, "psychologist")
+inrole(@Psychiatrist_Lee, "psychiatrist")
+inrole(@Surgeon_Martinez, "surgeon")
+
+# Researcher roles
+inrole(@Researcher_Martin, "researcher")
+inrole(@Researcher_Wong, "researcher")
+
+# Compliance roles
+inrole(@ComplianceOfficer_Davis, "compliance_officer")
+inrole(@PrivacyOfficer_Kim, "privacy_officer")
+
+# Support staff
+inrole(@ITAdmin_Hospital, "it_administrator")
+inrole(@Receptionist_Clinic, "receptionist")
+inrole(@BillingClerk, "billing_specialist")
+
+# Family caregivers
+inrole(@AliceHusband, "caregiver")
+inrole(@BobWife, "caregiver")
+inrole(@GrandmaCaregiver, "caregiver")
+
+# Law enforcement
+inrole(@OfficerJones, "law_enforcement")
+inrole(@Detective_Brown, "law_enforcement")
+
+# Covered Entities
+coveredEntity(@HospitalA)
+coveredEntity(@HospitalB)
+coveredEntity(@ClinicC)
+coveredEntity(@MentalHealthClinic)
+coveredEntity(@GroupPracticeD)
+coveredEntity(@HealthPlanX)
+coveredEntity(@ClearinghouseY)
+
+# Business Associates
+businessAssociate(@PharmacyX)
+businessAssociate(@BillingCompanyZ)
+businessAssociate(@CloudProviderAWS)
+businessAssociate(@TranscriptionServiceT)
+businessAssociate(@ShredCompanyS)
+
+# Public Health Authorities
+publicHealthAuthority(@HealthDeptStateA)
+publicHealthAuthority(@CDC)
+publicHealthAuthority(@FDA)
+
+# Health Oversight Agencies
+healthOversightAgency(@OIG)
+healthOversightAgency(@OCR)
+healthOversightAgency(@HealthOversightAgency_State)
+
+# Law Enforcement Officials
+lawEnforcementOfficial(@OfficerJones)
+lawEnforcementOfficial(@Detective_Brown)
+lawEnforcementOfficial(@FBI_Agent)
+isLawEnforcement(@OfficerJones)
+isLawEnforcement(@Detective_Brown)
+isLawEnforcement(@FBI_Agent)
+
+############################################################
+# WORKFORCE RELATIONSHIPS
+############################################################
+
+workforceOf(@Dr_Smith, @HospitalA)
+workforceOf(@Dr_Johnson, @ClinicC)
+workforceOf(@Nurse_Karen, @HospitalA)
+workforceOf(@Nurse_Mike, @ClinicC)
+workforceOf(@Therapist_Jones, @MentalHealthClinic)
+workforceOf(@Psychologist_Chen, @MentalHealthClinic)
+workforceOf(@ITAdmin_Hospital, @HospitalA)
+workforceOf(@Receptionist_Clinic, @ClinicC)
+workforceOf(@ComplianceOfficer_Davis, @HospitalA)
+workforceOf(@PrivacyOfficer_Kim, @HospitalA)
+
+############################################################
+# PHI RECORDS & PROPERTIES
+############################################################
+
+# Protected Health Information
+protectedHealthInfo(@phi_medrec_001)
+protectedHealthInfo(@phi_psych_aaa)
+protectedHealthInfo(@phi_sud_zzz)
+protectedHealthInfo(@phi_lab_023)
+protectedHealthInfo(@phi_research_xyz)
+protectedHealthInfo(@phi_deident_abc)
+protectedHealthInfo(@phi_limited_data_def)
+
+# Psychotherapy notes
+isPsychotherapyNotes(@phi_psych_aaa)
+
+# PHI sensitivity levels
+phiSensitivity(@phi_medrec_001, "medium")
+phiSensitivity(@phi_psych_aaa, "high")
+phiSensitivity(@phi_sud_zzz, "high")
+phiSensitivity(@phi_lab_023, "low")
+phiSensitivity(@phi_research_xyz, "low")
+phiSensitivity(@phi_deident_abc, "none")
+phiSensitivity(@phi_limited_data_def, "low")
+
+# De-identified data
+deidentified(@phi_deident_abc)
+removedAllIdentifiers(@phi_deident_abc)
+noActualKnowledge(@phi_deident_abc)
+
+# Limited data sets
+limitedDataSet(@phi_limited_data_def)
+
+# Record ownership
+hasRecord(@PatientAlice, @phi_medrec_001)
+hasRecord(@PatientAlice, @phi_psych_aaa)
+hasRecord(@PatientBob, @phi_sud_zzz)
+hasRecord(@PatientCarol, @phi_lab_023)
+hasRecord(@PatientDave, @phi_research_xyz)
+
+# Record creation
+createdBy(@HospitalA, @phi_medrec_001)
+createdBy(@MentalHealthClinic, @phi_psych_aaa)
+createdBy(@ClinicC, @phi_lab_023)
+
+############################################################
+# FAMILY & CARE RELATIONSHIPS
+############################################################
+
+# Family members
+familyMember(@AliceHusband, @PatientAlice)
+familyMember(@BobWife, @PatientBob)
+familyMember(@CarolDaughter, @PatientCarol)
+familyMember(@GrandmaCaregiver, @Grandma)
+
+# Involved in care
+involvedInCare(@AliceHusband, @PatientAlice)
+involvedInCare(@GrandmaCaregiver, @Grandma)
+inBestInterest(@Grandma, @GrandmaCaregiver)
+
+# Consent and preferences
+hasConsent(@PatientAlice, @AliceHusband, @phi_medrec_001)
+
+############################################################
+# AUTHORIZATIONS
+############################################################
+
+# General authorizations
+hasAuthorization(@HospitalA, @Researcher_Martin, @phi_research_xyz)
+hasAuthorization(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Psychotherapy notes authorizations
+hasAuthorizationPsychNotes(@MentalHealthClinic, @Therapist_Brown, @phi_psych_aaa)
+
+# Restrictions
+requestsRestriction(@PatientBob, @phi_sud_zzz)
+paidOutOfPocket(@PatientBob, @phi_sud_zzz)
+mustComplyWithRestriction(@ClinicC, @PatientBob, @phi_sud_zzz)
+
+############################################################
+# RESEARCH
+############################################################
+
+# IRB approvals
+irbApproval(@IRB_01, @Researcher_Martin, @Research)
+irbApproval(@IRB_University, @Researcher_Wong, @Research)
+waiverOfAuthorization(@IRB_01)
+
+# Data use agreements
+hasDataUseAgreement(@HospitalA, @Researcher_Martin, @phi_limited_data_def)
+
+# Research representations
+representationOfNeed(@Researcher_Wong)
+
+# Deceased subjects
+deceased(@PatientDeceased_A)
+deceased(@PatientDeceased_B)
+
+############################################################
+# LEGAL REQUIREMENTS & ORDERS
+############################################################
+
+# Required by law
+requiredByLaw(@PublicHealth)
+requiredByLaw(@AbuseReporting)
+
+# Authorized by law
+authorizedByLaw(@HealthDeptStateA, @PublicHealth)
+authorizedByLaw(@CDC, @PublicHealth)
+authorizedByLaw(@OIG, @HealthOversight)
+
+# Court orders and subpoenas
+hasCourtOrder(@CourtJudgeSmith, @phi_medrec_001)
+hasSubpoena(@Attorney_District, @phi_lab_023)
+satisfactoryAssurances(@Attorney_District, @phi_lab_023)
+
+# Law enforcement requests
+hasWarrant(@Detective_Brown, @phi_sud_zzz)
+hasAdminRequest(@OfficerJones, @phi_medrec_001)
+relevantAndMaterialInfo(@phi_medrec_001)
+
+############################################################
+# THREATS & SAFETY
+############################################################
+
+# Serious threats
+seriousThreat(@PatientEve)
+goodFaithBelief(@HospitalA, @PatientEve)
+ableToPreventThreat(@AliceHusband)
+
+# Crime on premises
+crimeOnPremises(@HospitalA)
+necessaryToAlertLE(@phi_medrec_001)
+
+############################################################
+# VICTIM STATUS
+############################################################
+
+victimOfAbuse(@ChildMinor)
+victimOfNeglect(@Grandma)
+victimOfDomesticViolence(@PatientGrace)
+agreesToReport(@PatientGrace)
+informedOfReport(@PatientGrace)
+
+############################################################
+# PATIENT CAPACITY & STATUS
+############################################################
+
+incapacitated(@Grandma)
+
+############################################################
+# PATIENT RIGHTS REQUESTS
+############################################################
+
+# Services received
+receivesServices(@PatientAlice, @HospitalA)
+receivesServices(@PatientBob, @ClinicC)
+receivesServices(@PatientCarol, @ClinicC)
+receivesServices(@Grandma, @HospitalA)
+
+# Access requests
+requestsAccess(@PatientAlice, @phi_medrec_001)
+requestsAccess(@PatientBob, @phi_sud_zzz)
+mustProvideAccess(@HospitalA, @PatientAlice, @phi_medrec_001)
+
+# Amendment requests
+requestsAmendment(@PatientCarol, @phi_lab_023)
+inaccurate(@phi_lab_023)
+mustAmendOrProvideReason(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Accounting requests
+requestsAccounting(@PatientAlice)
+withinSixYears(@PatientAlice)
+mustProvideAccounting(@HospitalA, @PatientAlice, @phi_medrec_001)
+
+# Notice requirements
+mustProvideNotice(@HospitalA, @PatientAlice)
+mustProvideNotice(@ClinicC, @PatientBob)
+
+############################################################
+# DISCLOSURES & USES
+############################################################
+disclose(ce, grandma, xrayScan, @InformalCare)
+
+# Permitted treatment disclosures
+disclose(@HospitalA, @Dr_Smith, @phi_medrec_001, @Treatment)
+permittedUseOrDisclosure(@HospitalA, @Dr_Smith, @phi_medrec_001, @Treatment)
+
+# Payment disclosures
+disclose(@ClinicC, @BillingCompanyZ, @phi_lab_023, @Payment)
+permittedUseOrDisclosure(@ClinicC, @BillingCompanyZ, @phi_lab_023, @Payment)
+
+# Public health disclosures
+disclose(@HospitalA, @HealthDeptStateA, @phi_medrec_001, @PublicHealth)
+permittedUseOrDisclosure(@HospitalA, @HealthDeptStateA, @phi_medrec_001, @PublicHealth)
+
+# Research disclosures
+disclose(@HospitalA, @Researcher_Martin, @phi_research_xyz, @Research)
+permittedUseOrDisclosure(@HospitalA, @Researcher_Martin, @phi_research_xyz, @Research)
+
+# Law enforcement disclosures
+disclose(@ClinicC, @Detective_Brown, @phi_sud_zzz, @LawEnforcement)
+permittedUseOrDisclosure(@ClinicC, @Detective_Brown, @phi_sud_zzz, @LawEnforcement)
+
+# Family disclosures
+disclose(@HospitalA, @AliceHusband, @phi_medrec_001, @InformalCaregiving)
+permittedUseOrDisclosure(@HospitalA, @AliceHusband, @phi_medrec_001, @InformalCaregiving)
+
+# Emergency disclosures
+disclose(@HospitalA, @GrandmaCaregiver, @phi_medrec_001, @Emergency)
+permittedUseOrDisclosure(@HospitalA, @GrandmaCaregiver, @phi_medrec_001, @Emergency)
+
+# Abuse reporting
+disclose(@HospitalA, @ChildProtectiveServices, @phi_medrec_001, @AbuseReporting)
+permittedUseOrDisclosure(@HospitalA, @ChildProtectiveServices, @phi_medrec_001, @AbuseReporting)
+
+# Minimum necessary applied
+minimumNecessary(@HospitalA, @Researcher_Martin, @phi_limited_data_def, @Research)
+minimumNecessary(@ClinicC, @BillingCompanyZ, @phi_lab_023, @Payment)
+
+# Disclosures to patients
+isDisclosureToPatient(@PatientAlice, @phi_medrec_001)
+toIndividual(@PatientAlice)
+
+############################################################
+# PURPOSE RELATIONSHIPS
+############################################################
+
+purposeIsPurpose(@Treatment, @Treatment)
+purposeIsPurpose(@Payment, @Payment)
+purposeIsPurpose(@HealthcareOperations, @HealthcareOperations)
+purposeIsPurpose(@Research, @Research)
+purposeIsPurpose(@PublicHealth, @PublicHealth)
+purposeIsPurpose(@LawEnforcement, @LawEnforcement)
+purposeIsPurpose(@Emergency, @Emergency)
+purposeIsPurpose(@AbuseReporting, @AbuseReporting)
+purposeIsPurpose(@SeriousThreat, @SeriousThreat)
+purposeIsPurpose(@InformalCaregiving, @InformalCaregiving)
+purposeIsPurpose(purpose, @HealthcareOperations)
+purposeIsPurpose(purpose, @Treatment)
+############################################################
+# COMPLIANCE & VIOLATIONS
+############################################################
+
+# Policy violations
+violatesPolicy(@ITAdmin_Hospital)
+mustApplySanctions(@HospitalA, @ITAdmin_Hospital)
+
+# Unauthorized disclosures
+unauthorizedDisclosure(@phi_medrec_001)
+mustMitigateHarm(@HospitalA, @phi_medrec_001)
+
+############################################################
+# NEGATIVE FACTS (Explicit denials for testing)
+############################################################
+
+# Patient does not object to disclosure
+not objectsToDisclosure(@PatientAlice, @AliceHusband)
+not objectsToDisclosure(@Grandma, @GrandmaCaregiver)
+
+# Not psychotherapy notes
+not isPsychotherapyNotes(@phi_medrec_001)
+not isPsychotherapyNotes(@phi_lab_023)
+not isPsychotherapyNotes(@phi_research_xyz)
+
+# Not compiled for legal proceedings
+not compiledForLegalProceeding(@phi_medrec_001)
+not compiledForLegalProceeding(@phi_lab_023)
+
+# Not prohibited by law
+not prohibitedByLaw(@phi_medrec_001)
+not prohibitedByLaw(@phi_lab_023)
+
+
+############################################################
+# ADMINISTRATIVE SAFEGUARDS - SECURITY MANAGEMENT
+############################################################
+
+# Security Management Process (§164.308(a)(1))
+hasSecurityManagementProcess(@HospitalA)
+conductsRiskAnalysis(@HospitalA)
+hasRiskManagementPlan(@HospitalA)
+hasSanctionPolicy(@HospitalA)
+hasReviewProcess(@HospitalA)
+
+hasSecurityManagementProcess(@ClinicC)
+conductsRiskAnalysis(@ClinicC)
+hasRiskManagementPlan(@ClinicC)
+
+# Risk Analysis
+hasRiskAnalysis(@HospitalA, @system_ehr)
+hasRiskAnalysis(@HospitalA, @system_billing)
+hasRiskAnalysis(@ClinicC, @system_ehr)
+hasRiskAnalysis(@ClinicC, @system_lab)
+
+# Identified Risks
+identifiedRisk(@risk_unauthorized_access, @system_ehr)
+identifiedRisk(@risk_malware, @system_ehr)
+identifiedRisk(@risk_data_loss, @system_billing)
+identifiedRisk(@risk_insider_threat, @system_ehr)
+identifiedRisk(@risk_ransomware, @system_ehr)
+identifiedRisk(@risk_phishing, @system_portal)
+identifiedRisk(@risk_weak_passwords, @system_ehr)
+identifiedRisk(@risk_unencrypted_transmission, @system_portal)
+
+# Risk Management
+hasMitigationPlan(@HospitalA, @risk_unauthorized_access)
+hasMitigationPlan(@HospitalA, @risk_malware)
+hasMitigationPlan(@HospitalA, @risk_ransomware)
+acceptedRisk(@ClinicC, @risk_weak_passwords)
+transferredRisk(@HospitalA, @risk_data_loss)
+
+############################################################
+# SECURITY OFFICIAL
+############################################################
+
+hasSecurityOfficial(@HospitalA)
+hasSecurityOfficial(@ClinicC)
+hasSecurityOfficial(@MentalHealthClinic)
+inrole(@ComplianceOfficer_Davis, "security_officer")
+
+############################################################
+# WORKFORCE SECURITY
+############################################################
+
+# Authorization Procedures
+hasAuthorizationProcedures(@HospitalA, @Dr_Smith)
+hasAuthorizationProcedures(@HospitalA, @Nurse_Karen)
+hasAuthorizationProcedures(@HospitalA, @ITAdmin_Hospital)
+hasAuthorizationProcedures(@ClinicC, @Dr_Johnson)
+
+# Workforce Clearance
+hasWorkforceClearance(@HospitalA, @Dr_Smith)
+hasWorkforceClearance(@HospitalA, @Nurse_Karen)
+hasWorkforceClearance(@ClinicC, @Receptionist_Clinic)
+hasClearanceLevel(@Dr_Smith)
+hasClearanceLevel(@Nurse_Karen)
+hasClearanceLevel(@ITAdmin_Hospital)
+hasClearanceLevel(@Receptionist_Clinic)
+
+# Termination Procedures
+hasTerminationProcedures(@HospitalA, @FormerEmployee_001)
+formerWorkforce(@FormerEmployee_001, @HospitalA)
+accessRevoked(@FormerEmployee_001)
+keysReturned(@FormerEmployee_001)
+accountsDisabled(@FormerEmployee_001)
+
+# System Access Authorization
+authorizedToAccess(@HospitalA, @Dr_Smith, @system_ehr)
+authorizedToAccess(@HospitalA, @Nurse_Karen, @system_ehr)
+authorizedToAccess(@HospitalA, @ITAdmin_Hospital, @system_ehr)
+authorizedToAccess(@ClinicC, @Dr_Johnson, @system_lab)
+
+############################################################
+# INFORMATION ACCESS MANAGEMENT
+############################################################
+
+# Access Policies
+hasAccessPolicy(@HospitalA, @Dr_Smith)
+hasAccessPolicy(@HospitalA, @Nurse_Karen)
+hasAccessPolicy(@ClinicC, @Receptionist_Clinic)
+
+# Access Requests and Grants
+requestsAccess(@Dr_Smith, @system_billing)
+accessGranted(@Dr_Smith, @system_ehr)
+accessGranted(@Nurse_Karen, @system_ehr)
+accessGranted(@ITAdmin_Hospital, @system_ehr)
+authorizedByRole(@Dr_Smith, @system_ehr)
+authorizedByRole(@Nurse_Karen, @system_ehr)
+
+# Access Levels
+hasAccessLevel(@Dr_Smith, @system_ehr, "access_level_full")
+hasAccessLevel(@Nurse_Karen, @system_ehr, "access_level_read_only")
+hasAccessLevel(@ITAdmin_Hospital, @system_ehr, "access_level_admin")
+hasAccessLevel(@Receptionist_Clinic, @system_billing, "access_level_limited")
+
+# Access Reviews
+reviewedAccess(@HospitalA, @Dr_Smith, @system_ehr)
+documentedAccess(@HospitalA, @Dr_Smith, @system_ehr)
+reviewedAccess(@HospitalA, @Nurse_Karen, @system_ehr)
+documentedAccess(@HospitalA, @Nurse_Karen, @system_ehr)
+
+############################################################
+# SECURITY AWARENESS AND TRAINING
+############################################################
+
+# Training Completion
+receivedSecurityTraining(@Dr_Smith)
+receivedSecurityTraining(@Nurse_Karen)
+receivedSecurityTraining(@ITAdmin_Hospital)
+receivedSecurityTraining(@Receptionist_Clinic)
+trainingDocumented(@Dr_Smith)
+trainingDocumented(@Nurse_Karen)
+trainingDocumented(@ITAdmin_Hospital)
+
+# Security Reminders
+receivesSecurityReminders(@Dr_Smith)
+receivesSecurityReminders(@Nurse_Karen)
+receivesSecurityReminders(@ITAdmin_Hospital)
+
+# Malware Protection
+hasMalwareProtection(@system_ehr)
+hasMalwareProtection(@system_billing)
+hasMalwareProtection(@workstation_001)
+malwareProtectionUpdated(@system_ehr)
+malwareProtectionUpdated(@system_billing)
+
+# Login Monitoring
+monitorsLoginAttempts(@system_ehr)
+monitorsLoginAttempts(@system_billing)
+monitorsLoginAttempts(@system_portal)
+
+# Password Management
+hasPasswordPolicy(@HospitalA)
+hasPasswordPolicy(@ClinicC)
+passwordMeetsComplexity(@Dr_Smith, @system_ehr)
+passwordMeetsComplexity(@Nurse_Karen, @system_ehr)
+passwordMeetsComplexity(@ITAdmin_Hospital, @system_ehr)
+passwordChangedRegularly(@Dr_Smith, @system_ehr)
+passwordChangedRegularly(@Nurse_Karen, @system_ehr)
+
+############################################################
+# SECURITY INCIDENT PROCEDURES
+############################################################
+
+# Incident Response Plans
+hasIncidentResponsePlan(@HospitalA)
+hasIncidentResponsePlan(@ClinicC)
+hasIncidentResponsePlan(@MentalHealthClinic)
+
+# Security Incidents
+securityIncident(@incident_001, @HospitalA)
+securityIncident(@incident_ransomware, @HospitalA)
+securityIncident(@incident_phishing, @ClinicC)
+securityIncident(@incident_unauthorized_access, @HospitalA)
+
+# Incident Handling
+incidentIdentified(@incident_001)
+incidentDocumented(@incident_001)
+incidentMitigated(@incident_001)
+incidentReported(@incident_001)
+
+incidentIdentified(@incident_ransomware)
+incidentDocumented(@incident_ransomware)
+incidentMitigated(@incident_ransomware)
+incidentReported(@incident_ransomware)
+
+############################################################
+# CONTINGENCY PLANNING
+############################################################
+
+# Contingency Plans
+hasDataBackupPlan(@HospitalA)
+hasDisasterRecoveryPlan(@HospitalA)
+hasEmergencyModeOperation(@HospitalA)
+hasTestingProcedures(@HospitalA)
+hasApplicationsCriticality(@HospitalA)
+hasContingencyPlan(@HospitalA)
+
+hasDataBackupPlan(@ClinicC)
+hasDisasterRecoveryPlan(@ClinicC)
+hasContingencyPlan(@ClinicC)
+
+# Data Backups
+hasBackup(@phi_medrec_001)
+backupTested(@phi_medrec_001)
+backupRecoverable(@phi_medrec_001)
+
+hasBackup(@phi_lab_023)
+backupTested(@phi_lab_023)
+backupRecoverable(@phi_lab_023)
+
+# Disaster Recovery
+canRestoreEPHI(@HospitalA)
+canRestoreEPHI(@ClinicC)
+
+# Testing
+contingencyPlanTested(@HospitalA)
+testingDocumented(@HospitalA)
+contingencyPlanTested(@ClinicC)
+
+############################################################
+# EVALUATION
+############################################################
+
+conductsPeriodicEvaluation(@HospitalA)
+evaluationDocumented(@HospitalA)
+conductsPeriodicEvaluation(@ClinicC)
+evaluationDocumented(@ClinicC)
+
+############################################################
+# BUSINESS ASSOCIATE AGREEMENTS
+############################################################
+
+# BAA Existence
+hasBAA(@HospitalA, @PharmacyX)
+hasBAA(@ClinicC, @BillingCompanyZ)
+hasBAA(@HospitalA, @CloudProviderAWS)
+hasBAA(@MentalHealthClinic, @TranscriptionServiceT)
+
+# BAA Requirements
+baaRequiresSafeguards(@HospitalA, @PharmacyX)
+baaRequiresReporting(@HospitalA, @PharmacyX)
+baaAllowsTermination(@HospitalA, @PharmacyX)
+
+baaRequiresSafeguards(@ClinicC, @BillingCompanyZ)
+baaRequiresReporting(@ClinicC, @BillingCompanyZ)
+baaAllowsTermination(@ClinicC, @BillingCompanyZ)
+
+# ePHI Disclosures to BAs
+disclosesEPHI(@HospitalA, @PharmacyX, @phi_medrec_001)
+disclosesEPHI(@ClinicC, @BillingCompanyZ, @phi_lab_023)
+disclosesEPHI(@HospitalA, @CloudProviderAWS, @phi_medrec_001)
+############################################################
+SYSTEMS AND ePHI
+############################################################
+Systems
+ephi_system(@system_ehr)
+ephi_system(@system_billing)
+ephi_system(@system_lab)
+ephi_system(@system_portal)
+ephi_system(@workstation_001)
+System Operations
+operatesSystem(@HospitalA, @system_ehr)
+operatesSystem(@HospitalA, @system_billing)
+operatesSystem(@ClinicC, @system_lab)
+operatesSystem(@ClinicC, @system_ehr)
+ePHI Storage
+storesEPHI(@system_ehr, @phi_medrec_001)
+storesEPHI(@system_billing, @phi_lab_023)
+storesEPHI(@system_lab, @phi_lab_023)
+storesEPHI(@system_ehr, @phi_psych_aaa)
+System Access
+accessesSystem(@Dr_Smith, @system_ehr)
+accessesSystem(@Nurse_Karen, @system_ehr)
+accessesSystem(@ITAdmin_Hospital, @system_ehr)
+accessesSystem(@Receptionist_Clinic, @system_billing)
+ePHI Access
+accessesEPHI(@Dr_Smith)
+accessesEPHI(@Nurse_Karen)
+accessesEPHI(@Therapist_Jones)
+accessesEPHI_workstation(@workstation_dr_office)
+Electronic PHI
+electronicPHI(@phi_medrec_001)
+electronicPHI(@phi_lab_023)
+electronicPHI(@phi_psych_aaa)
+electronicPHI(@phi_sud_zzz)
+############################################################
+PHYSICAL SAFEGUARDS
+############################################################
+Facility Operations
+operatesFacility(@HospitalA, "facility_hospital_main")
+operatesFacility(@HospitalA, "facility_data_center")
+operatesFacility(@ClinicC, "facility_clinic_north")
+Housing ePHI
+housingEPHI("facility_hospital_main")
+housingEPHI("facility_data_center")
+housingEPHI("server_room")
+Access Controls
+hasAccessControls("facility_hospital_main")
+hasAccessControls("facility_data_center")
+hasAccessControls("server_room")
+limitsPhysicalAccess("facility_data_center")
+limitsPhysicalAccess("server_room")
+validatesAccess("facility_data_center")
+Emergency Access
+allowsEmergencyAccess("facility_hospital_main")
+Facility Security Plans
+hasFacilitySecurityPlan("facility_hospital_main")
+hasFacilitySecurityPlan("facility_data_center")
+Facility Entry
+entersArea(@ITAdmin_Hospital, "server_room")
+validatedIdentity(@ITAdmin_Hospital)
+authorizedForArea(@ITAdmin_Hospital, "server_room")
+Maintenance
+maintenancePerformed("repair_server_001", "server_room")
+maintenanceDocumented("repair_server_001")
+maintenancePerformed("repair_hvac_server_room", "server_room")
+maintenanceDocumented("repair_hvac_server_room")
+############################################################
+WORKSTATION USE AND SECURITY
+############################################################
+Workstation Use
+usesWorkstation(@Dr_Smith, @workstation_dr_office)
+usesWorkstation(@Nurse_Karen, @workstation_nurse_station)
+hasWorkstationPolicy(@HospitalA)
+hasWorkstationPolicy(@ClinicC)
+workstationProperlyLocated(@workstation_dr_office)
+workstationSecured(@workstation_dr_office)
+Workstation Security
+ownsWorkstation(@HospitalA, @workstation_001)
+ownsWorkstation(@HospitalA, @workstation_dr_office)
+physicalSafeguardsImplemented(@workstation_001)
+physicalSafeguardsImplemented(@workstation_dr_office)
+unauthorizedAccessPrevented(@workstation_001)
+############################################################
+DEVICE AND MEDIA CONTROLS
+############################################################
+Media with ePHI
+containsEPHI("media_backup_tape_001", @phi_medrec_001)
+containsEPHI("media_hard_drive_old", @phi_lab_023)
+containsEPHI("media_usb_drive_001", @phi_psych_aaa)
+containsEPHI("media_laptop_hdd", @phi_medrec_001)
+Media Procedures
+hasDisposalProcedures(@HospitalA, "media_backup_tape_001")
+hasMediaReuseProcedures(@HospitalA, "media_hard_drive_old")
+hasAccountabilityProcedures(@HospitalA, "media_backup_tape_001")
+hasDataBackupProcedures(@HospitalA, "media_backup_tape_001")
+Media Disposal
+disposingOf(@HospitalA, "media_hard_drive_old")
+dataUnrecoverable("media_hard_drive_old")
+disposingOf(@ClinicC, "media_cd_rom_patient_records")
+physicallyDestroyed("media_cd_rom_patient_records")
+Media Reuse
+reusingMedia(@HospitalA, "media_usb_drive_001")
+phiRemovedBeforeReuse("media_usb_drive_001")
+Media Accountability
+mediaInventoryMaintained(@HospitalA, "media_backup_tape_001")
+mediaMovementsTracked("media_backup_tape_001")
+Backup Media
+backupMedia("media_backup_tape_001", @phi_medrec_001)
+backupStoredSecurely("media_backup_tape_001")
+backupRetrievable("media_backup_tape_001")
+############################################################
+TECHNICAL SAFEGUARDS - ACCESS CONTROL
+############################################################
+Access Control Features
+hasUniqueUserID(@system_ehr)
+hasEmergencyAccess(@system_ehr)
+hasAutomaticLogoff(@system_ehr)
+hasEncryptionDecryption(@system_ehr)
+hasUniqueUserID(@system_billing)
+hasEmergencyAccess(@system_billing)
+hasAutomaticLogoff(@system_billing)
+Unique User Identifiers
+hasUniqueIdentifier(@Dr_Smith, @system_ehr)
+hasUniqueIdentifier(@Nurse_Karen, @system_ehr)
+hasUniqueIdentifier(@ITAdmin_Hospital, @system_ehr)
+Emergency Access
+emergencyAccessAvailable(@system_ehr)
+emergencyAccessAvailable(@system_billing)
+Automatic Logoff
+activeSession("session_001", @system_ehr)
+activeSession("session_idle_30min", @system_portal)
+sessionInactive("session_idle_30min")
+sessionTerminated("session_idle_30min")
+Encryption
+encryptionAddressable(@system_ehr)
+encrypted(@phi_medrec_001)
+encrypted(@phi_lab_023)
+documentedReason(@ClinicC, @phi_research_xyz)
+############################################################
+AUDIT CONTROLS
+############################################################
+System Activities
+systemActivity("activity_login", @system_ehr)
+systemActivity("activity_access_phi", @system_ehr)
+systemActivity("activity_modify_record", @system_ehr)
+systemActivity("activity_export_data", @system_billing)
+systemActivity("activity_admin_change", @system_ehr)
+Activity Logging
+activityLogged("activity_login")
+activityLogged("activity_access_phi")
+activityLogged("activity_modify_record")
+activityLogged("activity_export_data")
+logReviewable("activity_login")
+logReviewable("activity_access_phi")
+logProtected("activity_login")
+logProtected("activity_access_phi")
+############################################################
+INTEGRITY CONTROLS
+############################################################
+hasIntegrityControls(@system_ehr)
+hasIntegrityControls(@system_billing)
+unauthorizedAlterationPrevented(@phi_medrec_001)
+unauthorizedAlterationPrevented(@phi_lab_023)
+hasAuthenticationMechanism(@phi_medrec_001)
+hasAuthenticationMechanism(@phi_lab_023)
+############################################################
+AUTHENTICATION
+############################################################
+attemptsAccess(@Dr_Smith, @system_ehr)
+identityVerified(@Dr_Smith, @system_ehr)
+authenticationSuccessful(@Dr_Smith, @system_ehr)
+attemptsAccess(@Nurse_Karen, @system_ehr)
+identityVerified(@Nurse_Karen, @system_ehr)
+authenticationSuccessful(@Nurse_Karen, @system_ehr)
+############################################################
+TRANSMISSION SECURITY
+############################################################
+Transmissions
+transmitsEPHI("transmission_vpn_001", @phi_medrec_001)
+transmitsEPHI("transmission_https_portal", @phi_lab_023)
+transmitsEPHI("transmission_email_001", @phi_psych_aaa)
+Transmission Integrity
+hasIntegrityControls("transmission_vpn_001")
+hasEncryption("transmission_vpn_001")
+integrityVerified("transmission_vpn_001")
+hasIntegrityControls("transmission_https_portal")
+hasEncryption("transmission_https_portal")
+Encrypted Transmissions
+transmissionOverInternet("transmission_https_portal")
+transmissionEncrypted("transmission_https_portal")
+transmissionOverInternet("transmission_vpn_001")
+transmissionEncrypted("transmission_vpn_001")
+Unencrypted (with documentation)
+transmissionOverInternet("transmission_ftp_unencrypted")
+documentedReasonNoEncryption(@ClinicC, "transmission_ftp_unencrypted")
+############################################################
+PRIVACY ADMINISTRATIVE REQUIREMENTS
+############################################################
+Personnel Designations
+hasPrivacyOfficial(@HospitalA)
+hasContactPerson(@HospitalA)
+hasPrivacyOfficial(@ClinicC)
+hasContactPerson(@ClinicC)
+inrole(@PrivacyOfficer_Kim, "privacy_officer")
+Privacy Training
+receivedPrivacyTraining(@Dr_Smith)
+receivedPrivacyTraining(@Nurse_Karen)
+receivedPrivacyTraining(@ITAdmin_Hospital)
+receivedPrivacyTraining(@Receptionist_Clinic)
+Safeguards
+administrativeSafeguards(@HospitalA, @phi_medrec_001)
+physicalSafeguards(@HospitalA, @phi_medrec_001)
+technicalSafeguards(@HospitalA, @phi_medrec_001)
+Complaints
+hasComplaintProcess(@HospitalA)
+complaintsDocumented(@HospitalA)
+hasComplaintProcess(@ClinicC)
+Sanctions
+privacyViolation(@ITAdmin_Hospital, "violation_unauthorized_access")
+sanctionsApplied(@HospitalA, @ITAdmin_Hospital)
+Mitigation
+unauthorizedUse(@phi_medrec_001)
+harmfulEffect("harm_embarrassment", @phi_medrec_001)
+mitigationAttempted(@HospitalA, "harm_embarrassment")
+Rights Exercise
+exercisesRights(@PatientAlice)
+not intimidated(@PatientAlice, @HospitalA)
+Waivers
+not waiverAsCondition(@HospitalA, "waiver_marketing_consent")
+Policies and Procedures
+hasPrivacyPolicies(@HospitalA)
+policiesImplemented(@HospitalA)
+policiesMaintained(@HospitalA)
+hasPrivacyPolicies(@ClinicC)
+policiesImplemented(@ClinicC)
+Documentation
+privacyAction("action_notice_provided", @HospitalA)
+actionDocumented("action_notice_provided")
+documentRetained("action_notice_provided", 6)
+privacyDocument("document_privacy_policy", @HospitalA)
+documentRetainedYears("document_privacy_policy", 6)
+privacyDocument("document_training_records", @HospitalA)
+documentRetainedYears("document_training_records", 6)
+############################################################
+BREACH NOTIFICATION
+############################################################
+Breach Determinations
+unauthorizedAcquisition(@breach_001, @phi_medrec_001)
+not goodFaithAccess(@breach_001)
+not inadvertentDisclosure(@breach_001)
+not unableToRetain(@breach_001)
+isBreach(@breach_001)
+unauthorizedAcquisition(@breach_ransomware_attack, @phi_medrec_001)
+isBreach(@breach_ransomware_attack)
+unauthorizedAcquisition(@breach_lost_unencrypted_device, @phi_lab_023)
+isBreach(@breach_lost_unencrypted_device)
+Individual Notifications
+affectsIndividual(@breach_001, @PatientAlice, @phi_medrec_001)
+notifyIndividual(@HospitalA, @PatientAlice, @breach_001)
+notificationWithin60Days(@HospitalA, @PatientAlice, @breach_001)
+Notification Content
+notificationIncludesDescription(@breach_001)
+notificationIncludesTypesOfPHI(@breach_001)
+notificationIncludesSteps(@breach_001)
+notificationIncludesMitigation(@breach_001)
+notificationIncludesContactInfo(@breach_001)
+Media Notification (500+ affected)
+affects500OrMore(@breach_ransomware_attack)
+affects500OrMore(@breach_hacking_incident)
+notifyMedia(@HospitalA, @breach_ransomware_attack)
+Secretary Notification
+notifySecretary(@HospitalA, @breach_001)
+notifySecretary(@HospitalA, @breach_ransomware_attack)
+notifyWithin60Days(@HospitalA, @breach_ransomware_attack)
+affectsFewerThan500(@breach_002)
+notifySecretary(@ClinicC, @breach_002)
+notifyAnnually(@ClinicC, @breach_002)
+BA to CE Notification
+breachAtBA(@breach_002, @BillingCompanyZ)
+notifyCE(@BillingCompanyZ, @ClinicC, @breach_002)
+Administrative Requirements
+riskAssessmentConducted(@breach_001)
+breachDocumented(@breach_001)
+documentationRetained(@breach_001, 6)
+riskAssessmentConducted(@breach_ransomware_attack)
+breachDocumented(@breach_ransomware_attack)
+documentationRetained(@breach_ransomware_attack, 6)
+############################################################
+NEGATIVE FACTS (for testing)
+############################################################
+Not encrypted (documented reasons)
+not encrypted(@phi_research_xyz)
+Good faith access (not a breach)
+goodFaithAccess(@breach_email_misdirection)
+not isBreach(@breach_email_misdirection)
+Inactive/terminated workforce
+not accessesEPHI(@FormerEmployee_001)
+
+############################################################
+# ACCESS RIGHTS (§164.524)
+############################################################
+
+# Access Requests
+requestsAccess(@PatientAlice, @phi_medrec_001)
+requestsAccess(@PatientBob, @phi_sud_zzz)
+requestsAccess(@PatientCarol, @phi_lab_023)
+requestsAccess(@PatientDave, @phi_research_xyz)
+
+# Must Provide Access
+mustProvideAccess(@HospitalA, @PatientAlice, @phi_medrec_001)
+mustProvideAccess(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Psychotherapy Notes Exception
+requestsAccess(@PatientAlice, @phi_psych_aaa)
+isPsychotherapyNotes(@phi_psych_aaa)
+not mustProvideAccess(@MentalHealthClinic, @PatientAlice, @phi_psych_aaa)
+unreviewableDenial(@MentalHealthClinic, @PatientAlice, @phi_psych_aaa)
+
+# Denied Access
+deniesAccess(@MentalHealthClinic, @PatientAlice, @phi_psych_aaa)
+denialInWriting(@MentalHealthClinic, @PatientAlice, @phi_psych_aaa)
+
+# Timely Action
+actWithin30Days(@HospitalA, @PatientAlice, @phi_medrec_001)
+actWithin30Days(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Reviewable Denials
+informationCompiledForLegalProceeding(@phi_medrec_001)
+mayDenyAccess(@HospitalA, @PatientAlice, @phi_medrec_001)
+reviewableDenial(@HospitalA, @PatientAlice, @phi_medrec_001)
+rightToReview(@PatientAlice, @phi_medrec_001)
+reviewByLicensedHealthcareProfessional(@HospitalA, @phi_medrec_001)
+
+# Format Requests
+requestsFormat(@PatientAlice, "format_pdf")
+formatReadilyProducible(@HospitalA, "format_pdf")
+provideInRequestedFormat(@HospitalA, @PatientAlice, @phi_medrec_001, "format_pdf")
+
+requestsFormat(@PatientBob, "format_electronic_ehr")
+maintainedInEHR(@phi_sud_zzz)
+requestsElectronicCopy(@PatientBob)
+provideElectronicCopy(@ClinicC, @PatientBob, @phi_sud_zzz)
+
+# Direct to Third Party
+directsToThirdParty(@PatientAlice, @ThirdParty_Attorney, @phi_medrec_001)
+transmitToThirdParty(@HospitalA, @ThirdParty_Attorney, @phi_medrec_001)
+
+# Fees
+chargesFee(@HospitalA, 650)
+feeCoversLaborOnly(650)
+feeCoversSupplies(650)
+feeCoversPostage(650)
+feeReasonable(650)
+
+# Summary Access
+agreesToSummary(@PatientCarol, "summary_medical_record")
+agreesToSummaryFee(@PatientCarol)
+mayProvideSummary(@ClinicC, @PatientCarol, "summary_medical_record")
+
+############################################################
+# AMENDMENT RIGHTS (§164.526)
+############################################################
+
+# Amendment Requests
+requestsAmendment(@PatientAlice, @phi_medrec_001)
+requestsAmendment(@PatientCarol, @phi_lab_023)
+requestsAmendment(@PatientBob, @phi_sud_zzz)
+
+# Must Amend or Provide Reason
+createdByEntity(@HospitalA, @phi_medrec_001)
+mustAmend(@HospitalA, @PatientAlice, @phi_medrec_001)
+
+createdByEntity(@ClinicC, @phi_lab_023)
+inaccurate(@phi_lab_023)
+mustAmend(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Grounds for Denial
+not createdByEntity(@ClinicC, @phi_sud_zzz)
+createdBy(@HospitalB, @phi_sud_zzz)
+originatorAvailable(@HospitalB)
+mayDenyAmendment(@ClinicC, @PatientBob, @phi_sud_zzz)
+
+accurate(@phi_research_xyz)
+complete(@phi_research_xyz)
+mayDenyAmendment(@HospitalA, @PatientDave, @phi_research_xyz)
+
+# Timely Action
+actOnAmendmentWithin60Days(@HospitalA, @PatientAlice, @phi_medrec_001)
+actOnAmendmentWithin60Days(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Accepted Amendments
+acceptsAmendment(@HospitalA, @PatientAlice, @phi_medrec_001)
+identifiesRelevantPersons(@PatientAlice, @Dr_Smith)
+informRecipient(@HospitalA, @Dr_Smith, @phi_medrec_001)
+
+acceptsAmendment(@ClinicC, @PatientCarol, @phi_lab_023)
+
+# Denied Amendments
+deniesAmendment(@ClinicC, @PatientBob, @phi_sud_zzz)
+denialInWriting(@ClinicC, @PatientBob, @phi_sud_zzz)
+basisForDenial(@ClinicC, @PatientBob, @phi_sud_zzz)
+rightToSubmitStatement(@PatientBob, @phi_sud_zzz)
+
+# Individual Statements
+submitsStatement(@PatientBob, "statement_amendment_disagreement", @phi_sud_zzz)
+linkStatement(@ClinicC, @phi_sud_zzz, "statement_amendment_disagreement")
+includeWithDisclosures(@ClinicC, @phi_sud_zzz, "statement_amendment_disagreement")
+
+# Designated Record Set
+partOfDesignatedRecordSet(@phi_medrec_001)
+partOfDesignatedRecordSet(@phi_lab_023)
+partOfDesignatedRecordSet(@phi_sud_zzz)
+availableForInspection(@phi_medrec_001)
+availableForInspection(@phi_lab_023)
+
+############################################################
+# ACCOUNTING OF DISCLOSURES (§164.528)
+############################################################
+
+# Accounting Requests
+requestsAccounting(@PatientAlice)
+requestsAccounting(@PatientBob)
+provideAccounting(@HospitalA, @PatientAlice)
+provideAccounting(@ClinicC, @PatientBob)
+
+# Disclosures to Include
+includeInAccounting(@disclosure_public_health_001)
+includeInAccounting(@disclosure_law_enforcement_002)
+includeInAccounting(@disclosure_research_003)
+
+# Disclosures to Exclude - TPO
+disclosureForTreatment(@disclosure_tpo_excluded)
+not includeInAccounting(@disclosure_tpo_excluded)
+
+# Disclosures to Exclude - To Individual
+disclosureToIndividual("disclosure_to_alice", @PatientAlice, @phi_medrec_001)
+not includeInAccounting("disclosure_to_alice")
+
+# Disclosures to Exclude - With Authorization
+disclosureWithAuthorization(@disclosure_with_auth_excluded, @phi_research_xyz)
+not includeInAccounting(@disclosure_with_auth_excluded)
+
+# Disclosures to Exclude - Facility Directory
+disclosureForFacilityDirectory("disclosure_directory_001")
+not includeInAccounting("disclosure_directory_001")
+
+# Disclosures to Exclude - Family/Friends
+disclosureToFamilyFriends("disclosure_to_husband")
+not includeInAccounting("disclosure_to_husband")
+
+# Accounting Content
+accountingIncludesDate(@disclosure_public_health_001)
+accountingIncludesRecipient(@disclosure_public_health_001)
+accountingIncludesDescription(@disclosure_public_health_001)
+accountingIncludesPurpose(@disclosure_public_health_001)
+
+# Timely Action
+provideAccountingWithin60Days(@HospitalA, @PatientAlice)
+
+# Accounting Periods
+requestsPeriod(@PatientAlice, "period_1_year")
+withinSixYears("period_1_year")
+provideAccountingForPeriod(@HospitalA, @PatientAlice, "period_1_year")
+
+requestsPeriod(@PatientBob, "period_6_months")
+withinSixYears("period_6_months")
+provideAccountingForPeriod(@ClinicC, @PatientBob, "period_6_months")
+
+############################################################
+# NOTICE OF PRIVACY PRACTICES (§164.520)
+############################################################
+
+# Direct Treatment Providers
+directTreatmentProvider(@HospitalA)
+directTreatmentProvider(@ClinicC)
+directTreatmentProvider(@MentalHealthClinic)
+receivesServices(@PatientAlice, @HospitalA)
+provideNotice(@HospitalA, @PatientAlice)
+makeGoodFaithEffort(@HospitalA, @PatientAlice)
+
+# Privacy Notice Content
+privacyNotice("notice_privacy_practices_v2", @HospitalA)
+noticeIncludesHeader("notice_privacy_practices_v2")
+noticeDescribesTPO("notice_privacy_practices_v2")
+noticeDescribesOtherUses("notice_privacy_practices_v2")
+noticeDescribesAccessRight("notice_privacy_practices_v2")
+noticeDescribesAmendmentRight("notice_privacy_practices_v2")
+noticeDescribesAccountingRight("notice_privacy_practices_v2")
+noticeDescribesRestrictionRight("notice_privacy_practices_v2")
+noticeDescribesConfidentialCommRight("notice_privacy_practices_v2")
+noticeDescribesComplaintRight("notice_privacy_practices_v2")
+noticeDescribesMaintainPrivacy("notice_privacy_practices_v2")
+noticeDescribesNoticeOfBreach("notice_privacy_practices_v2")
+noticeDescribesChangesToNotice("notice_privacy_practices_v2")
+noticeIncludesContactPerson("notice_privacy_practices_v2")
+noticeIncludesComplaintProcess("notice_privacy_practices_v2")
+
+# First Visit Provision
+firstServiceDelivery("visit_first_encounter", @PatientAlice, @HospitalA)
+provideNoticeAtFirstVisit(@HospitalA, @PatientAlice)
+
+# Electronic Notice
+maintainsWebsite(@HospitalA)
+postNoticeOnWebsite(@HospitalA)
+communicatesByEmail(@HospitalA, @PatientAlice)
+agreesToElectronicNotice(@PatientAlice)
+mayProvideElectronicNotice(@HospitalA, @PatientAlice)
+
+# Emergency Exception
+emergencyTreatment("emergency_cardiac_arrest", @PatientEve)
+unableToProvideNotice(@HospitalA, @PatientEve)
+provideNoticeAfterEmergency(@HospitalA, @PatientEve)
+
+# Health Plans
+healthPlan(@HealthPlanX)
+enrolls(@PatientAlice, @HealthPlanX)
+provideNoticeWithin60Days(@HealthPlanX, @PatientAlice)
+
+# Joint Notice
+jointlyProvideServices(@HospitalA, @ClinicC)
+jointNotice("notice_joint_practice", @HospitalA, @ClinicC)
+mayUseJointNotice(@HospitalA, @ClinicC, "notice_joint_practice")
+
+############################################################
+# RESTRICTION REQUESTS (§164.522)
+############################################################
+
+# Restriction Requests
+requestsRestriction(@PatientBob, @phi_sud_zzz, @HealthPlanX)
+requestsRestriction(@PatientCarol, @phi_lab_023, @ThirdParty_Employer)
+
+# May Agree or Decline
+mayAgreeToRestriction(@ClinicC, @PatientBob, @phi_sud_zzz, @HealthPlanX)
+mayDeclineRestriction(@ClinicC, @PatientCarol, @phi_lab_023, @ThirdParty_Employer)
+
+# Agreed Restrictions
+agreesToRestriction(@ClinicC, @PatientBob, @phi_sud_zzz, @HealthPlanX)
+boundByRestriction(@ClinicC, @phi_sud_zzz, @HealthPlanX)
+
+# Out-of-Pocket Payment Restriction
+paidOutOfPocketInFull(@PatientBob, @phi_sud_zzz)
+mustComplyWithRestriction(@ClinicC, @PatientBob, @phi_sud_zzz)
+
+# Emergency Exception
+emergencyTreatment("emergency_trauma", @PatientBob)
+neededForTreatment(@phi_sud_zzz, "emergency_trauma")
+mayDiscloseDespiteRestriction(@ClinicC, @phi_sud_zzz, @HealthPlanX)
+
+# Confidential Communications
+requestsConfidentialComm(@PatientAlice)
+mustAccommodateReasonableRequest(@HealthPlanX, @PatientAlice)
+
+requestsConfidentialComm(@PatientCarol)
+requestIsReasonable("request_alt_phone")
+mustAccommodate(@ClinicC, @PatientCarol, "request_alt_phone")
+
+# Termination of Restrictions
+restrictionTerminated(@restriction_terminated_001)
+
+############################################################
+# DECEDENTS AND PERSONAL REPRESENTATIVES (§164.514)
+############################################################
+
+# Personal Representatives
+personalRepresentative(@Healthcare_Proxy, @PatientAlice)
+personalRepresentative(@Legal_Guardian, @Minor_Unemancipated)
+personalRepresentative(@Executor_Estate, @PatientDeceased_A)
+
+# Treat as Individual
+treatAsIndividual(@HospitalA, @Healthcare_Proxy, @PatientAlice)
+treatAsIndividual(@ClinicC, @Legal_Guardian, @Minor_Unemancipated)
+
+# Decedents
+deceased(@PatientDeceased_A)
+deceased(@PatientDeceased_B)
+personalRepresentative(@Executor_Estate, @PatientDeceased_A)
+mayDiscloseToPersons(@HospitalA, @Executor_Estate, @phi_medrec_001)
+
+# Family Members of Decedents
+familyMember(@BobWife, @PatientDeceased_B)
+otherPersonInvolved(@BobWife, @PatientDeceased_B)
+mayDiscloseToPersons(@ClinicC, @BobWife, @phi_lab_023)
+
+# Minors
+unemancipatedMinor(@Minor_Unemancipated)
+parentOf(@Parent_Guardian, @Minor_Unemancipated)
+not minorConsentsUnderLaw(@Minor_Unemancipated)
+personalRepresentative(@Parent_Guardian, @Minor_Unemancipated)
+
+# Abuse Suspicion
+suspectAbuse(@HospitalA, @Parent_Guardian, @ChildMinor)
+not treatAsIndividual(@HospitalA, @Parent_Guardian, @ChildMinor)
+

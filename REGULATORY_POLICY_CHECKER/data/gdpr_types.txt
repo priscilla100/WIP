@@ -1,0 +1,32 @@
+PREDICATES
+True : Bool
+False : Bool
+dataSubject : Entity -> Bool
+dataController : Entity -> Bool
+dataProcessor : Entity -> Bool
+personalData : PHI -> Bool
+supervisoryAuthority : Entity -> Bool
+processingPurpose : Entity Purpose -> Bool
+hasLegalBasis : Entity Purpose -> Bool
+purposeIsPurpose : Purpose Purpose -> Bool
+hasRight : Entity Entity -> Bool
+hasConsent : Entity Entity -> Bool
+processData : Entity Entity PHI -> Bool
+transferData : Entity Entity PHI -> Bool
+adequacyDecision : Entity -> Bool
+appropriateSafeguards : Entity -> Bool
+requiresConsent : Entity Entity PHI -> Bool
+implementSafeguards : Entity Entity Entity -> Bool
+hasProtectionRight : Entity PHI -> Bool
+
+CONSTANTS
+@Consent : Purpose
+@Contract : Purpose
+@LegalObligation : Purpose
+@VitalInterest : Purpose
+@PublicInterest : Purpose
+@LegitimateInterest : Purpose
+
+FUNCTIONS
+# Add custom functions here if needed
+# Example: dataRetentionPeriod : PHI -> Int

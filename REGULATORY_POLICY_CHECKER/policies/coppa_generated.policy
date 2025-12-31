@@ -1,0 +1,47 @@
+regulation COPPA version "1.0"
+
+policy starts
+
+@["COPPA - Mixed audience website collection restrictions"]
+forall op, v, info. (operator(op) and collectsData(op, v, info) and personalInformation(info) and not purposeIsPurpose(info, @LegalCompliance)) implies (hasParentalConsent(v, op) or not child(v)) ;
+
+@["COPPA - Age information collection requirements"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info)) implies (not exists defaultAge. (defaultsToAge(op, defaultAge)) and not encouragesFalsification(op, ch)) ;
+
+@["COPPA - Verifiable parental consent requirements"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info)) implies hasParentalConsent(ch, op) ;
+
+@["Section 5 - Personal Information Collection on Behalf of Operator"]
+forall op, ch, info, agent, person. (operator(op) and child(ch) and personalInformation(info) and ((collectsData(agent, ch, info) and operator(agent)) or (collectsData(person, ch, info) and operator(op)))) implies collectsData(op, ch, info) ;
+
+@["Section 6502(a) - Treatment as FTC Act Violation"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info) and not hasParentalConsent(ch, op)) implies violatesUnfairDeceptivePracticeRule(op) ;
+
+@["§ 312.10 - Data retention time limit"]
+forall op, ch, info, purpose. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info) and purposeIsPurpose(purpose, @ServiceProvision)) implies retainsOnlyAsNecessary(op, info, purpose) ;
+
+@["§ 312.10 - Data deletion requirement"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info) and not(reasonablyNecessary(info, purpose))) implies deletesInformation(op, info) ;
+
+@["§ 312.10 - Prohibition on indefinite retention"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info)) implies not(retainsIndefinitely(op, info)) ;
+
+@["§ 312.10 - Written data retention policy requirement"]
+forall op. (operator(op)) implies (exists policy. (hasWrittenDataRetentionPolicy(op, policy) and specifiesPurposes(policy) and specifiesBusinessNeed(policy) and specifiesTimeframe(policy))) ;
+
+@["§ 312.10 - Data retention policy disclosure requirement"]
+forall op, ch, info. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info)) implies (hasDataRetentionPolicy(op) and providesNoticeOnWebsite(op)) ;
+
+@["§ 312.11 - Risk control safeguards requirement"]
+forall op. (operator(op)) implies (exists safeguards. (designsSafeguards(op, safeguards) and implementsSafeguards(op, safeguards) and maintainsSafeguards(op, safeguards) and controlsRisks(safeguards))) ;
+
+@["§ 312.11 - Safeguard design criteria"]
+forall op, ch, info, safeguard. (operator(op) and child(ch) and personalInformation(info) and collectsData(op, ch, info) and safeguard(safeguard) and appliedTo(safeguard, info)) implies (basedOnVolume(safeguard, info) and basedOnSensitivity(safeguard, info) and basedOnRiskLikelihood(safeguard, info)) ;
+
+@["§ 312.11 - Safeguard testing and monitoring requirement"]
+forall op. (operator(op) and exists ch, info. (child(ch) and personalInformation(info) and collectsData(op, ch, info))) implies (regularlyTests(op) and monitorsEffectiveness(op) and hasSafeguards(op)) ;
+
+@["§ 312.11 - Annual security program evaluation requirement"]
+forall op. (operator(op)) implies (annuallyEvaluatesAndModifiesSecurityProgram(op) and addressesIdentifiedRisks(op) and considersTestingResults(op) and adaptsToNewThreats(op)) ;
+
+policy ends

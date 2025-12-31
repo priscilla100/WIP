@@ -1,0 +1,334 @@
+regulation HIPAA version "2024.0" effective_date "2023-01-01"
+
+type declaration starts
+type Entity
+type PHI
+type Auth
+type Purpose
+type Date
+type Time
+type Int
+type declaration ends
+
+policy starts
+
+@["§164.502(a)(1) - General Uses & Disclosures"]
+forall ce, recipient, phi, purpose.
+  coveredEntity(ce)
+  and
+  protectedHealthInfo(phi)
+  and
+  disclose(ce, recipient, phi, purpose)
+  implies
+  permittedUseOrDisclosure(ce, recipient, phi, purpose)
+;
+
+@["§164.502(b) - Minimum Necessary"]
+forall actor, recipient, phi, purpose.
+  disclose(actor, recipient, phi, purpose)
+  implies
+  minimumNecessary(actor, recipient, phi, purpose)
+;
+
+@["§164.506 - Treatment Payment Operations (TPO)"]
+forall sender, receiver, phi, purpose.
+  disclose(sender, receiver, phi, purpose)
+  and
+  purposeIsPurpose(purpose, @Treatment)
+  or
+  purposeIsPurpose(purpose, @Payment)
+  or
+  purposeIsPurpose(purpose, @HealthcareOperations)
+  implies
+  permittedDisclosureTPO(sender, receiver, phi, purpose)
+;
+
+@["§164.508(a) - Authorization required for non-permitted uses"]
+forall actor, recipient, phi, auth, purpose.
+  useOrDisclose(actor, recipient, phi, purpose)
+  and
+  not(permittedUseOrDisclosure(actor, recipient, phi, purpose))
+  implies
+  requiresAuthorization(actor, recipient, phi, auth)
+;
+
+@["§164.508(c) - Psychotherapy notes need standalone auth"]
+forall clinician, recipient, notes, auth, purpose.
+  isPsychotherapyNotes(notes)
+  and
+  useOrDisclose(clinician, recipient, notes, purpose)
+  implies
+  mustHaveStandalonePsychNotesAuth(clinician, recipient, notes, auth)
+;
+
+@["Psychotherapy notes - Exceptions for originator treatment"]
+forall originator, notes, purpose.
+  isPsychotherapyNotes(notes)
+  and
+  originatorOfNotes(originator, notes)
+  and
+  psychotherapyUsedForTreatmentByOriginator(originator, notes)
+  implies
+  permittedWithoutStandaloneAuth(originator, notes)
+;
+
+@["§164.510(b) - Disclosure to family and involved in care"]
+forall family, patient, phi.
+  familyMember(family, patient)
+  and
+  involvedInCare(family, patient)
+  and
+  protectedHealthInfo(phi)
+  and
+  hasRecord(patient, phi)
+  implies
+  ( hasConsent(patient, family, phi)
+    or incapacitated(patient) )
+;
+
+@["§164.512(b) - Public Health disclosures"]
+forall provider, authority, phi, purpose.
+  publicHealthAuthority(authority)
+  and
+  disclose(provider, authority, phi, purpose)
+  and
+  purposeIsPurpose(purpose, @PublicHealth)
+  implies
+  permittedPublicHealthDisclosure(provider, authority, phi, purpose)
+;
+
+@["§164.512(d) - Health oversight disclosures"]
+forall ce, agency, phi, purpose.
+  healthOversightAgency(agency)
+  and
+  disclose(ce, agency, phi, purpose)
+  implies
+  permittedForOversight(ce, agency, phi, purpose)
+;
+
+@["§164.512(f) - Law enforcement disclosures under order"]
+forall ce, officer, phi, purpose.
+  lawEnforcementOfficer(officer)
+  and
+  disclose(ce, officer, phi, purpose)
+  and
+  purposeIsPurpose(purpose, @LawEnforcement)
+  and
+  lawfulOrderExists(officer)
+  implies
+  permittedLawEnforcementDisclosure(ce, officer, phi, purpose)
+;
+
+@["§164.524 - Individual right of access (30 days)"]
+forall patient, holder, phi, periodStart.
+  accessRequest(patient, phi, periodStart)
+  implies
+  mustProvideAccess(holder, patient, phi)
+  and
+  provideWithin(holder, patient, phi, @ThirtyDays)
+;
+
+@["§164.526 - Amendment of PHI (60 days)"]
+forall patient, holder, phi, req, requestDate.
+  amendmentRequest(patient, phi, req, requestDate)
+  implies
+  evaluateAmendment(holder, req, patient, phi)
+  and
+  respondWithin(holder, patient, phi, @SixtyDays)
+;
+
+@["§164.528 - Accounting of Disclosures"]
+forall patient, responder, periodStart.
+  accountingRequest(patient, periodStart)
+  implies
+  provideAccounting(responder, patient, periodStart)
+;
+
+@["§164.502(e) - Business Associates & contracts"]
+forall ce, ba, phi, purpose.
+  coveredEntity(ce)
+  and
+  businessAssociate(ba)
+  and
+  disclose(ce, ba, phi, purpose)
+  implies
+  hasBusinessAssociateAgreement(ce, ba)
+  and
+  baMayUseOnlyAsPermitted(ba, ce, phi, purpose)
+;
+
+@["§164.504 - OHCA uses across members"]
+forall member, phi, purpose.
+  organizedHealthCareArrangement(member)
+  and
+  disclose(member, @OHCA_Member, phi, purpose)
+  implies
+  permittedOHCAUseAcrossMembers(member, phi, purpose)
+;
+
+@["§164.514 - De-identification"]
+forall entity, phi, deidPhi.
+  deidentify(entity, phi, deidPhi)
+  implies
+  notIndividuallyIdentifiable(deidPhi)
+;
+
+@["§164.306 - Security: general duties (CIA)"]
+forall ce, ephi.
+  handlesEPHI(ce, ephi)
+  implies
+  ensureConfidentiality(ce, ephi)
+  and
+  ensureIntegrity(ce, ephi)
+  and
+  ensureAvailability(ce, ephi)
+;
+
+@["§164.308 - Risk analysis and management"]
+forall ce.
+  handlesEPHI(ce, @AnyPHI)
+  implies
+  conductRiskAnalysis(ce)
+  and
+  implementRiskManagement(ce)
+;
+
+@["§164.308(a)(5) - Workforce security & training"]
+forall ce, member.
+  coveredEntity(ce)
+  and
+  workforceMember(member, ce)
+  implies
+  securityTrainingRequired(member)
+  and
+  sanctionsPolicyInPlace(ce)
+;
+
+@["§164.310 - Physical safeguards"]
+forall ce, facility.
+  storesEPHI(ce, facility)
+  implies
+  implementFacilityAccessControls(ce, facility)
+  and
+  deviceMediaControls(ce, facility)
+;
+
+@["§164.312 - Technical safeguards"]
+forall system, ephi.
+  systemProcessesEPHI(system, ephi)
+  implies
+  implementAccessControls(system)
+  and
+  implementAuditControls(system)
+  and
+  implementIntegrityControls(system)
+  and
+  protectTransmission(system)
+;
+
+@["§164.400-414 - Breach notification applicability"]
+forall ce, ba, incident.
+  ( handlesUnsecuredPHI(ce)
+    or handlesUnsecuredPHI(ba) )
+  and
+  breachDiscoveredBy(ce, incident)
+  implies
+  subjectToBreachRule(ce, incident)
+;
+
+@["§164.402 - Breach definition & low-probability exception"]
+forall incident, phi.
+  acquiredUsedOrDisclosedWithoutAuthorization(incident, phi)
+  and
+  not(lowProbabilityOfCompromise(incident, phi))
+  implies
+  isBreach(incident)
+;
+
+@["§164.404 - Notify individuals (60 days)"]
+forall ce, incident, phi, detectionDate.
+  isBreach(incident)
+  and
+  breachInvolvesPHI(incident, phi)
+  implies
+  mustNotifyIndividuals(ce, incident, phi)
+  and
+  notifyWithin(ce, incident, @SixtyDays)
+;
+
+@["§164.406 - Media notice for 500+ affected"]
+forall ce, incident.
+  isBreach(incident)
+  and
+  breachAffectsMoreThan(incident, 500)
+  implies
+  mustNotifyMedia(ce, incident)
+;
+
+@["§164.410 - BA notifies CE of breach"]
+forall ba, ce, incident.
+  businessAssociate(ba)
+  and
+  badiscoversBreach(ba, incident)
+  implies
+  notifyCE(ba, ce, incident)
+  and
+  notifyWithoutUndueDelay(ba, ce, incident)
+;
+
+@["Emergency treatment exception (immediate care)"]
+forall provider, patient, phi.
+  emergencyTreatment(provider, patient, phi)
+  and
+  immediateCareRequired(patient)
+  implies
+  permittedDisclosureForEmergency(provider, patient, phi)
+;
+
+@["Incapacitated patient exception"]
+forall provider, patient, phi.
+  incapacitated(patient)
+  and
+  reasonableBeliefNeeded(provider, patient)
+  implies
+  permittedDisclosureWhenIncapacitated(provider, patient, phi)
+;
+
+@["Research: IRB waiver or preparatory review"]
+forall researcher, phi, auth.
+  ( irbApproved(auth)
+    and
+    researchUse(researcher, phi, auth) )
+  or
+  ( preparatoryReview(researcher, phi) )
+  implies
+  permittedResearchUse(researcher, phi)
+;
+
+@["Marketing & sale restrictions"]
+forall ce, recipient, phi.
+  ( marketingUse(ce, recipient, phi)
+    or saleOfPHI(ce, recipient, phi) )
+  implies
+  requiresSpecificAuthorization(ce, recipient, phi)
+;
+
+@["Minors & personal representative"]
+forall rep, patient, phi.
+  personalRepresentative(rep, patient)
+  and
+  legalAuthority(rep, patient)
+  implies
+  treatAsPersonalRepresentative(rep, patient, phi)
+;
+
+@["Decedent PHI (50-year hook)"]
+forall phi, currentDate.
+  isDecedentPHI(phi)
+  and
+  olderThan50Years(phi, currentDate)
+  implies
+  notPHIForHIPAA(phi)
+;
+
+policy ends

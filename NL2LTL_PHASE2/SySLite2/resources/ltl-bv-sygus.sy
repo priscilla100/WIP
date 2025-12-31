@@ -1,0 +1,90 @@
+; COMMAND-LINE: cvc4 --lang=sygus2
+
+(set-logic BV)
+(set-option :sygus-out status-and-def)
+(set-option :e-matching false)
+
+;;Trace length + BVn 
+;%{1} 
+;;Last-Index
+;%{2} 
+
+(define-fun S_FALSE () Stream ZERO)
+(define-fun S_TRUE () Stream (bvnot S_FALSE))
+
+(define-fun bvimpl ( (A Stream) (B Stream) ) Stream
+  (bvor (bvnot A) B)
+)
+
+(define-fun set-m-plus-n-bit-of-A-to-m-bit-of-B ( (A Stream) (n BVn) (B Stream) (m BVn) ) Stream
+  (let ((pow2m (bvshl ONE m)))
+    (bvor
+      (bvand A (bvsub (bvshl pow2m n) ONE))
+      (bvshl (bvand B pow2m) n)
+    )
+  )
+)
+
+(define-fun X ((k BVn) (l BVn) (A Stream)) Stream
+  (let (( shrA1 (bvlshr A ONE) ))
+    (set-m-plus-n-bit-of-A-to-m-bit-of-B shrA1 k shrA1 l)
+  )
+)
+
+;; Reverse Function
+;%{3}
+
+(define-fun reverse ((k BVn) (l BVn) (A Stream)) Stream
+  (rev (bvshl A (bvadd LastIndex (bvneg (bvadd k l))) ))
+)
+
+(define-fun untilNL ((k BVn) (l BVn) (A Stream) (B Stream)) Stream
+  (bvor B
+    (bvand A 
+      (bvnot (reverse k l (bvadd (reverse k l (bvor A B)) (reverse k l B) )) )
+    )
+  )
+)
+
+(define-fun U ((k BVn) (l BVn) (A Stream) (B Stream)) Stream
+  (untilNL k l
+    A 
+    (set-m-plus-n-bit-of-A-to-m-bit-of-B B k (untilNL k l A B) l)
+  )
+)
+
+(define-fun F ((k BVn) (l BVn) (A Stream)) Stream
+  (U k l S_TRUE A)
+)
+
+(define-fun G ((k BVn) (l BVn) (A Stream)) Stream
+  (bvnot (F k l (bvnot A)))
+)
+
+; l = loop position
+; k = prefix length/last position minus loop position
+(synth-fun phi ((k BVn) (l BVn) ;%{4}) Stream
+   ((<f> Stream) (<p> Stream))
+   ((<f> Stream (
+     S_TRUE 
+     S_FALSE
+     <p>
+     (bvnot <f>)
+     (bvand <f> <f>) 
+     (bvor <f> <f>)
+     (bvimpl <f> <f>)
+     (X k l <f>)
+     (U k l <f> <f>)
+     (F k l <f>)
+     (G k l <f>)
+    ))
+    (<p> Stream (;%{4a}))
+   )
+)
+;; Positive examples
+;%{5}
+
+;; Negative examples
+;%{6}
+
+(check-synth)

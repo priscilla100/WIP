@@ -1,0 +1,38 @@
+regulation CCPA version "1.0"
+
+policy starts
+
+@["Section 1798.81.5 - Trade secrets disclosure exemption"]
+forall b, data. (business(b) and personalInformation(data) and tradeSecret(data)) implies not(required(disclosesData(b, any, data))) ;
+
+@["1798.105 - Consumer Right to Request Deletion"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and collectedFrom(b, c, data)) implies hasDeletionRight(c, b, data) ;
+
+@["1798.105 - Business Disclosure Requirement"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and collectsData(b, c, data)) implies disclosesData(b, c, data) ;
+
+@["Section 1798.130 - Business deletion obligations upon verifiable consumer request"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and verifiableRequest(c, b, data) and deletionRequest(c, data)) implies (deleteFromRecords(b, data) and notifyServiceProviders(b, data) and notifyThirdParties(b, data)) ;
+
+@["Section 1798.130 - Business permitted to maintain confidential deletion records"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and hasOptOut(c, b)) implies (maintainsConfidentialRecord(b, data) and (purposeIsPurpose(prevention, @BusinessPurpose) or purposeIsPurpose(compliance, @BusinessPurpose) or purposeIsPurpose(other, @BusinessPurpose))) ;
+
+@["Section 1798.130 - Service provider cooperation and deletion obligations"]
+forall sp, c, b, data. (serviceProvider(sp) and consumer(c) and business(b) and personalInformation(data) and (collectsData(sp, c, data) or usesData(sp, c, data) or processesData(sp, c, data) or retainsData(sp, c, data)) and verifiableRequest(c, b)) implies (cooperatesWithBusiness(sp, b) and deletesData(sp, c, data) and notifiesSubcontractors(sp, c, data)) ;
+
+@["Section 1798.130 - Service provider exemption from direct consumer requests"]
+forall sp, c, data. (serviceProvider(sp) and consumer(c) and personalInformation(data) and deletionRequest(c, sp, data)) implies not(requiredToComply(sp, deletionRequest(c, sp, data))) ;
+
+@["1798.105(d)(6) - Research Exception to Deletion"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and engagesInResearch(b, data) and conformsToEthicsLaws(b) and deletionImpairstResearch(b, data) and hasInformedConsent(c, b)) implies canRetainData(b, data) ;
+
+@["1798.105(d)(7) - Internal Use Exception"]
+forall b, c, data, purpose. (business(b) and consumer(c) and personalInformation(data) and purposeIsPurpose(purpose, @BusinessPurpose) and internalUse(b, data, purpose) and reasonablyAligned(purpose, c, b) and compatibleWithContext(purpose, data, c)) implies permitted(b, c, data, purpose) ;
+
+@["1798.106(a) - Consumer Right to Correct"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and maintains(b, data, c) and inaccurate(data)) implies hasRightToCorrect(c, b, data) ;
+
+@["Section 1798.130 - Business obligation to correct inaccurate personal information"]
+forall b, c, data. (business(b) and consumer(c) and personalInformation(data) and receivesVerifiableRequest(b, c, data) and isInaccurate(data)) implies correctsPersonalInformation(b, data) ;
+
+policy ends

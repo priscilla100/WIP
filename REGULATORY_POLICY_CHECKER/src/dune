@@ -1,0 +1,19 @@
+(executable
+ (name main)
+ (public_name precis)
+ (modules 
+   ast lexer parser type_checker evaluator 
+   type_system_db data_loaders policy_loader
+   environment_config query_engine json_interface main)
+ (libraries yojson str menhirLib unix))
+
+(ocamllex 
+ (modules lexer))
+
+(menhir 
+ (modules parser)
+ (flags --explain --unused-tokens))
+
+(env
+ (dev
+  (flags (:standard -w -A))))
