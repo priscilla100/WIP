@@ -2,24 +2,6 @@
 
 A centralized dashboard to launch and manage your three independent Streamlit projects.
 
-## 📁 Directory Structure
-
-```
-WIP/
-├── main_app.py                    # Main dashboard launcher
-├── launch.sh                       # Convenience script for launching
-├── LAUNCHER_README.md             # This file
-├── NL2LTL_PHASE2/
-│   ├── streamlit_app.py
-│   └── ...
-├── PROTOCOL_FORMALIZATION/
-│   ├── streamlit_app.py
-│   └── ...
-└── REGULATORY_POLICY_CHECKER/
-    ├── streamlit_app.py
-    └── ...
-```
-
 ## 🎯 Quick Start
 
 ### Option 1: Using the Launch Script (Easiest)
